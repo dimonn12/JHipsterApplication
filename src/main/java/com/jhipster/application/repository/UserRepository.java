@@ -1,6 +1,6 @@
 package com.jhipster.application.repository;
 
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.User;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 

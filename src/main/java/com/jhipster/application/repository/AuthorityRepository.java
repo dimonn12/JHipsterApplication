@@ -1,6 +1,6 @@
 package com.jhipster.application.repository;
 
-import com.jhipster.application.domain.Authority;
+import com.jhipster.application.domain.security.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

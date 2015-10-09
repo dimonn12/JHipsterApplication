@@ -1,7 +1,7 @@
 package com.jhipster.application.service;
 
-import com.jhipster.application.domain.Authority;
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.Authority;
+import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.AuthorityRepository;
 import com.jhipster.application.repository.PersistentTokenRepository;
 import com.jhipster.application.repository.UserRepository;

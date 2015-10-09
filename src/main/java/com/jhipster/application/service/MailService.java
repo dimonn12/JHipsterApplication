@@ -1,6 +1,6 @@
 package com.jhipster.application.service;
 
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.User;
 import org.apache.commons.lang.CharEncoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,6 @@
 package com.jhipster.application.security;
 
-import com.jhipster.application.domain.PersistentToken;
+import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.repository.PersistentTokenRepository;
 import com.jhipster.application.repository.UserRepository;
 import org.joda.time.LocalDate;

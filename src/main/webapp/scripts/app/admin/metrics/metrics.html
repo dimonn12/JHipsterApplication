@@ -3,7 +3,7 @@
     <h2 translate="metrics.title">Application Metrics</h2>
 
     <p>
-        <button type="button" class="btn btn-primary" ng-click="refresh()">
+        <button type="button" class="btn btn-primary" ng-click="refresh()" title="{{'metrics.refresh.button' | translate}}">
             <span class="glyphicon glyphicon-refresh"/>
             <span translate="metrics.refresh.button">Refresh</span>
         </button>
@@ -256,7 +256,7 @@
                     <td class="text-right">{{metrics.gauges[k + '.eviction-count'].value}}</td>
                     <td class="text-right">{{metrics.gauges[k + '.mean-get-time'].value | number:2}}</td>
                     <td class="text-right">
-                        <button type="button" class="btn btn-danger" ng-click="clearCache(v.name)">
+                        <button type="button" class="btn btn-danger" ng-click="clearCache(v.name)" title="{{'metrics.ehcache.clearcache.button' | translate}}">
                             <span class="glyphicon glyphicon-refresh"/>
                             <span translate="metrics.ehcache.clear.button">Clear</span>
                         </button>

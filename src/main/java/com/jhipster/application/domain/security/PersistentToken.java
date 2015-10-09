@@ -1,4 +1,4 @@
-package com.jhipster.application.domain;
+package com.jhipster.application.domain.security;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

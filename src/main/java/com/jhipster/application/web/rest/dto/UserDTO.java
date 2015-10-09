@@ -1,7 +1,7 @@
 package com.jhipster.application.web.rest.dto;
 
-import com.jhipster.application.domain.Authority;
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.Authority;
+import com.jhipster.application.domain.security.User;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;

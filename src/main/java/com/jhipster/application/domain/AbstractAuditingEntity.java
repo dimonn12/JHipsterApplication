@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * Base abstract class for entities which will hold definitions for created, last modified by and created,
@@ -22,7 +23,8 @@ import javax.validation.constraints.NotNull;
 @MappedSuperclass
 @Audited
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditingEntity {
+public abstract class AbstractAuditingEntity<E extends AbstractAuditingEntity<E, ID>, ID extends Serializable>
+    extends BaseEntity<E, ID> {
 
     @CreatedBy
     @NotNull
@@ -79,4 +81,15 @@ public abstract class AbstractAuditingEntity {
     public void setLastModifiedDate(DateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+    @Override
+    protected E copyEntity(E entityToCopyFrom, E entityToCopyTo) {
+        entityToCopyTo = super.copyEntity(entityToCopyFrom, entityToCopyTo);
+        entityToCopyTo.setCreatedBy(entityToCopyFrom.getCreatedBy());
+        entityToCopyTo.setCreatedDate(entityToCopyFrom.getCreatedDate());
+        entityToCopyTo.setLastModifiedBy(entityToCopyFrom.getLastModifiedBy());
+        entityToCopyTo.setLastModifiedDate(entityToCopyFrom.getLastModifiedDate());
+        return entityToCopyTo;
+    }
+
 }

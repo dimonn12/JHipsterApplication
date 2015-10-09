@@ -1,7 +1,7 @@
 package com.jhipster.application.repository;
 
-import com.jhipster.application.domain.PersistentToken;
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.PersistentToken;
+import com.jhipster.application.domain.security.User;
 import org.joda.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 

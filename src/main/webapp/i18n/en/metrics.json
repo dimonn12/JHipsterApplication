@@ -77,7 +77,8 @@
             "misses": "Misses",
             "evictioncount": "Eviction count",
             "mean": "Mean get time (ms)",
-            "clear.button": "Clear"
+            "clear.button": "Clear",
+            "clearcache.button": "Clear Cache"
         },
         "datasource": {
             "usage": "Usage",

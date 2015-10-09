@@ -1,6 +1,6 @@
 package com.jhipster.application.repository.search;
 
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.User;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 /**

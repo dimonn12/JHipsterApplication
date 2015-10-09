@@ -1,9 +1,12 @@
-package com.jhipster.application.domain;
+package com.jhipster.application.domain.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jhipster.application.domain.SoftDeletedEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Email;
 import org.joda.time.DateTime;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -11,9 +14,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -31,13 +31,11 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "jhi_user")
+@SQLDelete(sql = "UPDATE jhi_user SET deleted = 1 WHERE id = ?")
+@Where(clause = "deleted = 0")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "user")
-public class User extends AbstractAuditingEntity implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User extends SoftDeletedEntity<User, Long> implements Serializable {
 
     @NotNull
     @Pattern(regexp = "^[a-z0-9]*$|(anonymousUser)")
@@ -84,6 +82,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "reset_date", nullable = true)
     private DateTime resetDate = null;
 
+    @Column(name = "is_locked", nullable = false)
+    private boolean isLocked = false;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -97,14 +98,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<PersistentToken> persistentTokens = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getLogin() {
         return login;
@@ -186,6 +179,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.langKey = langKey;
     }
 
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
     public Set<Authority> getAuthorities() {
         return authorities;
     }
@@ -222,19 +223,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return login.hashCode();
+        return this.login.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-               "login='" + login + '\'' +
-               ", firstName='" + firstName + '\'' +
-               ", lastName='" + lastName + '\'' +
-               ", email='" + email + '\'' +
-               ", activated='" + activated + '\'' +
-               ", langKey='" + langKey + '\'' +
-               ", activationKey='" + activationKey + '\'' +
-               "}";
-    }
 }

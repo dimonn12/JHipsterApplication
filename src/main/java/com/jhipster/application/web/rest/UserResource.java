@@ -1,8 +1,8 @@
 package com.jhipster.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.jhipster.application.domain.Authority;
-import com.jhipster.application.domain.User;
+import com.jhipster.application.domain.security.Authority;
+import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.AuthorityRepository;
 import com.jhipster.application.repository.UserRepository;
 import com.jhipster.application.repository.search.UserSearchRepository;

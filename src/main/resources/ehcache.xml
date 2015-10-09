@@ -17,23 +17,23 @@
         overflowToDisk="false"
         />
 
-    <cache name="com.jhipster.application.domain.User"
+    <cache name="com.jhipster.application.domain.security.User"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="com.jhipster.application.domain.Authority"
+    <cache name="com.jhipster.application.domain.security.Authority"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="com.jhipster.application.domain.User.authorities"
+    <cache name="com.jhipster.application.domain.security.User.authorities"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="com.jhipster.application.domain.PersistentToken"
+    <cache name="com.jhipster.application.domain.security.PersistentToken"
            timeToLiveSeconds="3600">
     </cache>
 
-    <cache name="com.jhipster.application.domain.User.persistentTokens"
+    <cache name="com.jhipster.application.domain.security.User.persistentTokens"
            timeToLiveSeconds="3600">
     </cache>
 </ehcache>

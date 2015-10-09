@@ -1,4 +1,4 @@
-package com.jhipster.application.domain;
+package com.jhipster.application.domain.security;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

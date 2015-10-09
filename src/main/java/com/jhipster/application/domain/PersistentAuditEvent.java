@@ -24,12 +24,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "jhi_persistent_audit_event")
-public class PersistentAuditEvent {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "event_id")
-    private Long id;
+public class PersistentAuditEvent extends BaseEntity<PersistentAuditEvent, Long>{
 
     @NotNull
     @Column(nullable = false)
@@ -38,22 +33,15 @@ public class PersistentAuditEvent {
     @Column(name = "event_date")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     private LocalDateTime auditEventDate;
+
     @Column(name = "event_type")
     private String auditEventType;
 
     @ElementCollection
     @MapKeyColumn(name = "name")
     @Column(name = "value")
-    @CollectionTable(name = "jhi_persistent_audit_evt_data", joinColumns = @JoinColumn(name = "event_id"))
+    @CollectionTable(name = "jhi_persistent_audit_evt_data", joinColumns = @JoinColumn(name = "id"))
     private Map<String, String> data = new HashMap<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getPrincipal() {
         return principal;
@@ -85,5 +73,24 @@ public class PersistentAuditEvent {
 
     public void setData(Map<String, String> data) {
         this.data = data;
+    }
+
+    @Override
+    protected PersistentAuditEvent copyEntity(PersistentAuditEvent entityToCopyFrom,
+                                              PersistentAuditEvent entityToCopyTo) {
+        if (null == entityToCopyTo) {
+            entityToCopyTo = new PersistentAuditEvent();
+        }
+        entityToCopyTo = super.copyEntity(entityToCopyFrom, entityToCopyTo);
+        entityToCopyTo.setAuditEventDate(entityToCopyFrom.getAuditEventDate());
+        entityToCopyTo.setAuditEventType(entityToCopyFrom.getAuditEventType());
+        entityToCopyTo.setData(entityToCopyFrom.getData());
+        entityToCopyTo.setPrincipal(entityToCopyFrom.getPrincipal());
+        return entityToCopyTo;
+    }
+
+    @Override
+    public int hashCode() {
+        return baseHashCode(23);
     }
 }
