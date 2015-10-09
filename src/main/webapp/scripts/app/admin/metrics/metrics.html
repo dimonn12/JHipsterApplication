@@ -4,8 +4,7 @@
 
     <p>
         <button type="button" class="btn btn-primary" ng-click="refresh()">
-            <span class="glyphicon glyphicon-refresh"></span>
-            &nbsp;
+            <span class="glyphicon glyphicon-refresh"/>
             <span translate="metrics.refresh.button">Refresh</span>
         </button>
     </p>
@@ -245,6 +244,7 @@
                     <th class="text-right" translate="metrics.ehcache.misses">Misses</th>
                     <th class="text-right" translate="metrics.ehcache.evictioncount">Eviction count</th>
                     <th class="text-right" translate="metrics.ehcache.mean">Mean get time (ms)</th>
+                    <th class="text-right"/>
                 </tr>
             </thead>
             <tbody>
@@ -255,6 +255,12 @@
                     <td class="text-right">{{metrics.gauges[k + '.misses'].value}}</td>
                     <td class="text-right">{{metrics.gauges[k + '.eviction-count'].value}}</td>
                     <td class="text-right">{{metrics.gauges[k + '.mean-get-time'].value | number:2}}</td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-danger" ng-click="clearCache(v.name)">
+                            <span class="glyphicon glyphicon-refresh"/>
+                            <span translate="metrics.ehcache.clear.button">Clear</span>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

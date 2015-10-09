@@ -19,6 +19,10 @@ angular.module('jHipsterApplicationApp')
                 return $http.get('dump').then(function (response) {
                     return response.data;
                 });
+            },
+
+            clearCache: function (cacheName, callThen) {
+                return $http.post('api/cache', {cacheName: cacheName}).then(callThen);
             }
         };
     });

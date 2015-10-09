@@ -76,7 +76,8 @@
             "hits": "Hits",
             "misses": "Misses",
             "evictioncount": "Eviction count",
-            "mean": "Mean get time (ms)"
+            "mean": "Mean get time (ms)",
+            "clear.button": "Clear"
         },
         "datasource": {
             "usage": "Usage",

@@ -30,9 +30,9 @@ angular.module('jHipsterApplicationApp')
                     var newKey = key.substr(0, index);
 
                     // Keep the name of the domain
-                    index = newKey.lastIndexOf('.');
+                    index = newKey.lastIndexOf('net.sf.ehcache.Cache.');
                     $scope.cachesStats[newKey] = {
-                        'name': newKey.substr(index + 1),
+                        'name': newKey.substr(index + 'net.sf.ehcache.Cache.'.length),
                         'value': value
                     };
                 }
@@ -58,5 +58,7 @@ angular.module('jHipsterApplicationApp')
             });
         };
 
-
+        $scope.clearCache = function (cacheName) {
+            MonitoringService.clearCache(cacheName, $scope.refresh);
+        }
     });

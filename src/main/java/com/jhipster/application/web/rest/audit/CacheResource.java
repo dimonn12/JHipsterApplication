@@ -22,7 +22,7 @@ public class CacheResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(CacheResource.class);
 
-    @RequestMapping(value = "/cache", method = RequestMethod.PUT)
+    @RequestMapping(value = "/cache", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Timed
     public void clearCache(@RequestBody CacheDTO jsonCache) {
