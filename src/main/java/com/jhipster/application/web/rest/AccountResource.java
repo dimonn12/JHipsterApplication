@@ -6,7 +6,7 @@ import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.SecurityUtils;
-import com.jhipster.application.service.MailService;
+import com.jhipster.application.service.mail.MailService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.dto.security.KeyAndPasswordDTO;
 import com.jhipster.application.web.rest.dto.security.UserDTO;

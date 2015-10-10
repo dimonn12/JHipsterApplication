@@ -1,5 +1,8 @@
-package com.jhipster.application.web.rest.errors;
+package com.jhipster.application.web.exception;
 
+import com.jhipster.application.context.status.ErrorStatus;
+import com.jhipster.application.context.status.ErrorStatusCode;
+import com.jhipster.application.web.rest.dto.errors.ErrorDTO;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,8 +26,8 @@ public class ExceptionTranslator {
     @ExceptionHandler(ConcurrencyFailureException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
-    public ErrorDTO processConcurencyError(ConcurrencyFailureException ex) {
-        return new ErrorDTO(ErrorConstants.ERR_CONCURRENCY_FAILURE);
+    public ErrorDTO processConcurrencyError(ConcurrencyFailureException ex) {
+        return new ErrorDTO(new ErrorStatus(ErrorStatusCode.CONCURRENCY_CONFLICT));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,38 +36,28 @@ public class ExceptionTranslator {
     public ErrorDTO processValidationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
-
         return processFieldErrors(fieldErrors);
-    }
-
-    @ExceptionHandler(CustomParameterizedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ParameterizedErrorDTO processParameterizedValidationError(CustomParameterizedException ex) {
-        return ex.getErrorDTO();
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    public ErrorDTO processAccessDeniedExcpetion(AccessDeniedException e) {
-        return new ErrorDTO(ErrorConstants.ERR_ACCESS_DENIED, e.getMessage());
-    }
-
-    private ErrorDTO processFieldErrors(List<FieldError> fieldErrors) {
-        ErrorDTO dto = new ErrorDTO(ErrorConstants.ERR_VALIDATION);
-
-        for(FieldError fieldError : fieldErrors) {
-            dto.add(fieldError.getObjectName(), fieldError.getField(), fieldError.getCode());
-        }
-
-        return dto;
+    public ErrorDTO processAccessDeniedException(AccessDeniedException e) {
+        return new ErrorDTO(new ErrorStatus(ErrorStatusCode.FORBIDDEN));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorDTO processMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
-        return new ErrorDTO(ErrorConstants.ERR_METHOD_NOT_SUPPORTED, exception.getMessage());
+        return new ErrorDTO(new ErrorStatus(ErrorStatusCode.METHOD_NOT_SUPPORTED));
+    }
+
+    private ErrorDTO processFieldErrors(List<FieldError> fieldErrors) {
+        ErrorDTO dto = new ErrorDTO(new ErrorStatus(ErrorStatusCode.VALIDATION_ERROR));
+        for(FieldError fieldError : fieldErrors) {
+            dto.addFieldError(fieldError.getObjectName(), fieldError.getField(), fieldError.getCode());
+        }
+        return dto;
     }
 }

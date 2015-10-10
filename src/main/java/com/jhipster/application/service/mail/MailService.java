@@ -1,4 +1,4 @@
-package com.jhipster.application.service;
+package com.jhipster.application.service.mail;
 
 import com.jhipster.application.domain.security.User;
 import org.apache.commons.lang.CharEncoding;

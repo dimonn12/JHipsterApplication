@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class BaseEntity<E extends BaseEntity<E, ID>, ID extends Serializable>
-    implements Model<ID>, Serializable {
+    implements Model<ID> {
 
     private static final long serialVersionUID = -884367423115557713L;
 

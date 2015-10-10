@@ -6,7 +6,7 @@ import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.AuthorityRepository;
 import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.AuthoritiesConstants;
-import com.jhipster.application.service.MailService;
+import com.jhipster.application.service.mail.MailService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.junit.Before;

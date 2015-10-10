@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import java.io.Serializable;
 
 
-public abstract class BaseEntityDTO<E extends BaseEntity<E, ID> & Model<ID>, ID extends Serializable>
+public abstract class BaseEntityDTO<E extends BaseEntity<E, ID> & Model<ID>, ID extends Serializable> extends BaseDTO
     implements Model<ID> {
 
     private ID id;
