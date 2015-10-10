@@ -47,4 +47,27 @@ public class SecurityUtilsTest {
         boolean isAuthenticated = SecurityUtils.isAuthenticated();
         assertThat(isAuthenticated).isFalse();
     }
+
+    @Test
+    public void testIsAdmin() {
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin", authorities));
+        SecurityContextHolder.setContext(securityContext);
+        boolean isAdmin = SecurityUtils.isAdmin();
+        assertThat(isAdmin).isTrue();
+    }
+
+    @Test
+    public void testIsUserInRole() {
+        String testRole = "TEST_ROLE";
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(testRole));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin", authorities));
+        SecurityContextHolder.setContext(securityContext);
+        boolean isUserInRole = SecurityUtils.isUserInRole(testRole);
+        assertThat(isUserInRole).isTrue();
+    }
 }

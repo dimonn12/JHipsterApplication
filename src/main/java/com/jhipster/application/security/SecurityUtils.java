@@ -45,15 +45,31 @@ public final class SecurityUtils {
      */
     public static boolean isAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        Collection<? extends GrantedAuthority> authorities = securityContext.getAuthentication().getAuthorities();
-        if(authorities != null) {
-            for(GrantedAuthority authority : authorities) {
-                if(authority.getAuthority().equals(AuthoritiesConstants.ANONYMOUS)) {
-                    return false;
-                }
+        Authentication auth = securityContext.getAuthentication();
+        if(null != auth) {
+            Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            if(null != authorities) {
+                return containsAnonymous(authorities);
             }
         }
         return true;
+    }
+
+    /**
+     * Check if a user is admin.
+     *
+     * @return true if the user is admin, false otherwise
+     */
+    public static boolean isAdmin() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication auth = securityContext.getAuthentication();
+        if(null != auth) {
+            Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            if(authorities != null) {
+                return containsAdmin(authorities);
+            }
+        }
+        return false;
     }
 
     /**
@@ -62,13 +78,39 @@ public final class SecurityUtils {
      */
     public static boolean isUserInRole(String authority) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        if(authentication != null) {
-            if(authentication.getPrincipal() instanceof UserDetails) {
-                UserDetails springSecurityUser = (UserDetails)authentication.getPrincipal();
-                return springSecurityUser.getAuthorities().contains(new SimpleGrantedAuthority(authority));
+        Authentication auth = securityContext.getAuthentication();
+        if(null != auth) {
+            if(auth.getPrincipal() instanceof UserDetails) {
+                UserDetails springSecurityUser = (UserDetails)auth.getPrincipal();
+                Collection<? extends GrantedAuthority> authorities = springSecurityUser.getAuthorities();
+                if(authorities != null) {
+                    return containsRole(authorities, authority);
+                }
+            } else {
+                Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+                if(authorities != null) {
+                    return containsRole(authorities, authority);
+                }
             }
         }
         return false;
     }
+
+    private static boolean containsAnonymous(Collection<? extends GrantedAuthority> authorities) {
+        return containsRole(authorities, AuthoritiesConstants.ANONYMOUS);
+    }
+
+    private static boolean containsAdmin(Collection<? extends GrantedAuthority> authorities) {
+        return containsRole(authorities, AuthoritiesConstants.ADMIN);
+    }
+
+    private static boolean containsRole(Collection<? extends GrantedAuthority> authorities, String role) {
+        for(GrantedAuthority authority : authorities) {
+            if(authority.getAuthority().equals(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
