@@ -32,4 +32,17 @@ public class ErrorStatus implements Status {
         return message;
     }
 
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(code);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(null != obj && obj instanceof ErrorStatus) {
+            return this.code == ((ErrorStatus)obj).code;
+        } else {
+            return false;
+        }
+    }
 }

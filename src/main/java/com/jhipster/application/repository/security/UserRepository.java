@@ -12,15 +12,15 @@ import java.util.Optional;
  */
 public interface UserRepository extends BaseEntityRepository<User, Long> {
 
-    Optional<User> findOneByActivationKey(String activationKey);
+    User findOneByActivationKey(String activationKey);
 
     List<User> findAllByActivatedIsFalseAndCreatedDateBefore(DateTime dateTime);
 
-    Optional<User> findOneByResetKey(String resetKey);
+    User findOneByResetKey(String resetKey);
 
-    Optional<User> findOneByEmail(String email);
+    User findOneByEmail(String email);
 
-    Optional<User> findOneByLogin(String login);
+    User findOneByLogin(String login);
 
     @Override
     void delete(User t);

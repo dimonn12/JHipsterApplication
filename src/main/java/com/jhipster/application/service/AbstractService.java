@@ -30,10 +30,12 @@ public abstract class AbstractService<R extends BaseEntityRepository<E, ID>, E e
         return this.repository;
     }
 
+    @Transactional(readOnly = true)
     public E getById(ID id) {
         return this.repository.getOne(id);
     }
 
+    @Transactional(readOnly = true)
     public List<E> findAll() {
         return this.repository.findAll();
     }
@@ -45,7 +47,7 @@ public abstract class AbstractService<R extends BaseEntityRepository<E, ID>, E e
             return result;
         } catch(Exception e) {
             logger.error("Can't update {}", e, entity);
-            getCurrentContext().addStatus(new ErrorStatus(ErrorStatusCode.INTERNAL_SERVER_ERROR));
+            addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
         }
         return null;
     }
@@ -57,6 +59,10 @@ public abstract class AbstractService<R extends BaseEntityRepository<E, ID>, E e
 
     protected Context getCurrentContext() {
         return contextHolder.getCurrentContext();
+    }
+
+    protected void addError(ErrorStatusCode errorStatusCode) {
+        getCurrentContext().addStatus(new ErrorStatus(errorStatusCode));
     }
 
 }

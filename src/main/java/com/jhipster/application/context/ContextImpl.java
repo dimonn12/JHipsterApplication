@@ -5,7 +5,9 @@ import com.jhipster.application.context.status.StatusType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -14,11 +16,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ContextImpl implements Context {
 
-    private final List<Status> statusList;
+    private final Set<Status> statusList;
     private final Lock lock = new ReentrantLock();
 
     public ContextImpl() {
-        statusList = new ArrayList<>();
+        statusList = new HashSet<>();
     }
 
     @Override
