@@ -1,4 +1,4 @@
-package com.jhipster.application.web.rest.dto;
+package com.jhipster.application.web.rest.dto.security;
 
 public class KeyAndPasswordDTO {
 

@@ -1,8 +1,7 @@
 package com.jhipster.application.security;
 
 import com.jhipster.application.domain.security.User;
-import com.jhipster.application.repository.security.UserRepository;
-import com.jhipster.application.service.UserService;
+import com.jhipster.application.service.security.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;

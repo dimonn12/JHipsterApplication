@@ -1,4 +1,4 @@
-package com.jhipster.application.service;
+package com.jhipster.application.service.security;
 
 import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.User;

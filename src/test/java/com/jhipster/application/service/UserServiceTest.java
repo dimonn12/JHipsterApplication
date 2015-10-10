@@ -5,6 +5,7 @@ import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
+import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.service.util.RandomUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

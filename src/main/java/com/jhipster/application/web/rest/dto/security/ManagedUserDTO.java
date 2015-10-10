@@ -1,4 +1,4 @@
-package com.jhipster.application.web.rest.dto;
+package com.jhipster.application.web.rest.dto.security;
 
 import com.jhipster.application.domain.security.User;
 import org.joda.time.DateTime;
@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
  */
 public class ManagedUserDTO extends UserDTO {
 
-    private Long id;
-
     private DateTime createdDate;
+
+    private String createdBy;
 
     private String lastModifiedBy;
 
@@ -21,18 +21,9 @@ public class ManagedUserDTO extends UserDTO {
 
     public ManagedUserDTO(User user) {
         super(user);
-        this.id = user.getId();
         this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public DateTime getCreatedDate() {
@@ -59,13 +50,4 @@ public class ManagedUserDTO extends UserDTO {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    @Override
-    public String toString() {
-        return "ManagedUserDTO{" +
-               "id=" + id +
-               ", createdDate=" + createdDate +
-               ", lastModifiedBy='" + lastModifiedBy + '\'' +
-               ", lastModifiedDate=" + lastModifiedDate +
-               "} " + super.toString();
-    }
 }
