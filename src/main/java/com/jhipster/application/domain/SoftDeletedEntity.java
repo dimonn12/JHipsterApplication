@@ -5,7 +5,8 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class SoftDeletedEntity<E extends SoftDeletedEntity<E, ID>, ID extends Serializable> extends AbstractAuditingEntity<E, ID> {
+public abstract class SoftDeletedEntity<E extends SoftDeletedEntity<E, ID>, ID extends Serializable>
+    extends AbstractAuditingEntity<E, ID> {
 
     private static final long serialVersionUID = -335144964285137631L;
 

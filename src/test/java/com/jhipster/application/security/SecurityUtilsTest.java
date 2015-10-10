@@ -13,10 +13,10 @@ import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
-* Test class for the SecurityUtils utility class.
-*
-* @see SecurityUtils
-*/
+ * Test class for the SecurityUtils utility class.
+ *
+ * @see SecurityUtils
+ */
 public class SecurityUtilsTest {
 
     @Test
@@ -42,7 +42,9 @@ public class SecurityUtilsTest {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("anonymous", "anonymous", authorities));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("anonymous",
+            "anonymous",
+            authorities));
         SecurityContextHolder.setContext(securityContext);
         boolean isAuthenticated = SecurityUtils.isAuthenticated();
         assertThat(isAuthenticated).isFalse();

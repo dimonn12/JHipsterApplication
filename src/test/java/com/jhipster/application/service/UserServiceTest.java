@@ -5,22 +5,22 @@ import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
-import org.joda.time.DateTime;
 import com.jhipster.application.service.util.RandomUtil;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class for the UserResource REST controller.
@@ -72,7 +72,12 @@ public class UserServiceTest {
 
     @Test
     public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+        User user = userService.createUserInformation("johndoe",
+            "johndoe",
+            "John",
+            "Doe",
+            "john.doe@localhost",
+            "en-US");
         Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser.isPresent()).isFalse();
         userRepository.delete(user);
@@ -81,7 +86,12 @@ public class UserServiceTest {
     @Test
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
 
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+        User user = userService.createUserInformation("johndoe",
+            "johndoe",
+            "John",
+            "Doe",
+            "john.doe@localhost",
+            "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         String resetKey = RandomUtil.generateResetKey();
@@ -102,7 +112,12 @@ public class UserServiceTest {
     @Test
     public void assertThatResetKeyMustBeValid() {
 
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+        User user = userService.createUserInformation("johndoe",
+            "johndoe",
+            "John",
+            "Doe",
+            "john.doe@localhost",
+            "en-US");
 
         DateTime daysAgo = DateTime.now().minusHours(25);
         user.setActivated(true);
@@ -122,7 +137,12 @@ public class UserServiceTest {
     @Test
     public void assertThatUserCanResetPassword() {
 
-        User user = userService.createUserInformation("johndoe", "johndoe", "John", "Doe", "john.doe@localhost", "en-US");
+        User user = userService.createUserInformation("johndoe",
+            "johndoe",
+            "John",
+            "Doe",
+            "john.doe@localhost",
+            "en-US");
 
         String oldPassword = user.getPassword();
 

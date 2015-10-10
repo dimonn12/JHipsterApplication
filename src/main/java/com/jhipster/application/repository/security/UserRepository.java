@@ -3,7 +3,6 @@ package com.jhipster.application.repository.security;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.BaseEntityRepository;
 import org.joda.time.DateTime;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;

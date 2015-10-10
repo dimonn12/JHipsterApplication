@@ -7,9 +7,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -24,7 +21,7 @@ import java.util.Map;
  */
 @Entity
 @Table(name = "jhi_persistent_audit_event")
-public class PersistentAuditEvent extends BaseEntity<PersistentAuditEvent, Long>{
+public class PersistentAuditEvent extends BaseEntity<PersistentAuditEvent, Long> {
 
     @NotNull
     @Column(nullable = false)
@@ -78,7 +75,7 @@ public class PersistentAuditEvent extends BaseEntity<PersistentAuditEvent, Long>
     @Override
     protected PersistentAuditEvent copyEntity(PersistentAuditEvent entityToCopyFrom,
                                               PersistentAuditEvent entityToCopyTo) {
-        if (null == entityToCopyTo) {
+        if(null == entityToCopyTo) {
             entityToCopyTo = new PersistentAuditEvent();
         }
         entityToCopyTo = super.copyEntity(entityToCopyFrom, entityToCopyTo);
