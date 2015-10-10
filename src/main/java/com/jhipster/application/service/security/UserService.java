@@ -1,5 +1,7 @@
 package com.jhipster.application.service.security;
 
+import com.jhipster.application.context.ContextHolder;
+import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.search.UserSearchRepository;
@@ -7,6 +9,7 @@ import com.jhipster.application.repository.security.AuthorityRepository;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.SecurityUtils;
+import com.jhipster.application.service.AbstractService;
 import com.jhipster.application.service.util.RandomUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -28,15 +31,15 @@ import java.util.Set;
  */
 @Service
 @Transactional
-public class UserService {
+public class UserService extends AbstractService<UserRepository, User, Long> {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Inject
-    private PasswordEncoder passwordEncoder;
+    private ContextHolder contextHolder;
 
     @Inject
-    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Inject
     private UserSearchRepository userSearchRepository;
@@ -49,14 +52,17 @@ public class UserService {
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
-        userRepository.findOneByActivationKey(key).map(user -> {
+        getRepository().findOneByActivationKey(key).map(user -> {
             // activate given user for the registration key.
             user.setActivated(true);
             user.setActivationKey(null);
-            userRepository.save(user);
+            getRepository().save(user);
             userSearchRepository.save(user);
             log.debug("Activated user: {}", user);
             return user;
+        }).orElseGet(() -> {
+
+            return null;
         });
         return Optional.empty();
     }
@@ -128,34 +134,42 @@ public class UserService {
     }
 
     public void changePassword(String password) {
-        userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).ifPresent(u -> {
+        User user = getRepository().findOneByLogin(SecurityUtils.getCurrentLogin());
+        if(null != user) {
             String encryptedPassword = passwordEncoder.encode(password);
-            u.setPassword(encryptedPassword);
-            userRepository.save(u);
-            log.debug("Changed password for User: {}", u);
-        });
+            user.setPassword(encryptedPassword);
+            getRepository().save(user);
+            log.debug("Changed password for User: {}", user);
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
+        }
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneByLogin(login).map(u -> {
-            u.getAuthorities().size();
-            return u;
-        });
+    public User getUserWithAuthoritiesByLogin(String login) {
+        User user = getRepository().findOneByLogin(login);
+        if(null != user) {
+            user.getAuthorities().size();// eagerly load the association
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
+        }
+        return user;
     }
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities(Long id) {
-        User user = userRepository.findOne(id);
-        user.getAuthorities().size(); // eagerly load the association
+        User user = getRepository().findOne(id);
+        if(null != user) {
+            user.getAuthorities().size();// eagerly load the association
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_ID);
+        }
         return user;
     }
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
-        user.getAuthorities().size(); // eagerly load the association
-        return user;
+        return getUserWithAuthoritiesByLogin(SecurityUtils.getCurrentLogin());
     }
 
     /**
@@ -187,15 +201,21 @@ public class UserService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         DateTime now = new DateTime();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
+        List<User> users = getRepository().findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
         for(User user : users) {
             log.debug("Deleting not activated user {}", user.getLogin());
-            userRepository.delete(user);
+            getRepository().delete(user);
             userSearchRepository.delete(user);
         }
     }
 
-    public Optional<User> findOneByLogin(String login) {
-        return userRepository.findOneByLogin(login);
+    @Transactional(readOnly = true)
+    public User findOneByLoginOrEmail(String login) {
+        User user = getRepository().findOneByLogin(login);
+        if(null == user) {
+            user = getRepository().findOneByEmail(login);
+        }
+        return user;
     }
+
 }
