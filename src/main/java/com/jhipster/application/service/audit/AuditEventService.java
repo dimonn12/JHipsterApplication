@@ -1,4 +1,4 @@
-package com.jhipster.application.service;
+package com.jhipster.application.service.audit;
 
 import com.jhipster.application.config.audit.AuditEventConverter;
 import com.jhipster.application.domain.PersistentAuditEvent;

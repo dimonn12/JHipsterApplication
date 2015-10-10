@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
-@EnableJpaRepositories("com.jhipster.application.repository")
+@EnableJpaRepositories({"com.jhipster.application.repository", "com.jhipster.application.repository.*"})
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 @EnableElasticsearchRepositories("com.jhipster.application.repository.search")

@@ -2,6 +2,7 @@ package com.jhipster.application.security;
 
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.UserRepository;
+import com.jhipster.application.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,14 +26,14 @@ public class UserDetailsService implements org.springframework.security.core.use
     private final Logger log = LoggerFactory.getLogger(UserDetailsService.class);
 
     @Inject
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String login) {
         log.debug("Authenticating {}", login);
         String lowercaseLogin = login.toLowerCase();
-        Optional<User> userFromDatabase = userRepository.findOneByLogin(lowercaseLogin);
+        Optional<User> userFromDatabase = userService.findOneByLogin(lowercaseLogin);
         return userFromDatabase.map(user -> {
             if(!user.getActivated()) {
                 throw new UserNotActivatedException("User " + lowercaseLogin + " was not activated");

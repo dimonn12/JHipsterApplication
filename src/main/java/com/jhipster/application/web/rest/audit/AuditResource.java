@@ -1,6 +1,6 @@
 package com.jhipster.application.web.rest.audit;
 
-import com.jhipster.application.service.AuditEventService;
+import com.jhipster.application.service.audit.AuditEventService;
 import com.jhipster.application.web.propertyeditors.LocaleDateTimeEditor;
 import org.joda.time.LocalDateTime;
 import org.springframework.boot.actuate.audit.AuditEvent;

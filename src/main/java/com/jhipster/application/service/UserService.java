@@ -2,8 +2,8 @@ package com.jhipster.application.service;
 
 import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.User;
-import com.jhipster.application.repository.AuthorityRepository;
 import com.jhipster.application.repository.search.UserSearchRepository;
+import com.jhipster.application.repository.security.AuthorityRepository;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.SecurityUtils;
@@ -193,5 +193,9 @@ public class UserService {
             userRepository.delete(user);
             userSearchRepository.delete(user);
         }
+    }
+
+    public Optional<User> findOneByLogin(String login) {
+        return userRepository.findOneByLogin(login);
     }
 }

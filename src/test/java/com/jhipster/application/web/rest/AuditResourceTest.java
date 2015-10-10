@@ -4,7 +4,7 @@ import com.jhipster.application.Application;
 import com.jhipster.application.config.audit.AuditEventConverter;
 import com.jhipster.application.domain.PersistentAuditEvent;
 import com.jhipster.application.repository.PersistenceAuditEventRepository;
-import com.jhipster.application.service.AuditEventService;
+import com.jhipster.application.service.audit.AuditEventService;
 import com.jhipster.application.web.rest.audit.AuditResource;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
