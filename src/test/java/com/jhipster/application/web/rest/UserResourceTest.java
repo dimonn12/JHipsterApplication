@@ -1,7 +1,7 @@
 package com.jhipster.application.web.rest;
 
 import com.jhipster.application.Application;
-import com.jhipster.application.repository.UserRepository;
+import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.service.UserService;
 import org.junit.Before;
 import org.junit.Test;

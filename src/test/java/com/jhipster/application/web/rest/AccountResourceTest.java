@@ -4,7 +4,7 @@ import com.jhipster.application.Application;
 import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.AuthorityRepository;
-import com.jhipster.application.repository.UserRepository;
+import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.AuthoritiesConstants;
 import com.jhipster.application.service.MailService;
 import com.jhipster.application.service.UserService;

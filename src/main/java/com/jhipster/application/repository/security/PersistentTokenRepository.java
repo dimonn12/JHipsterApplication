@@ -1,4 +1,4 @@
-package com.jhipster.application.repository;
+package com.jhipster.application.repository.security;
 
 import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
