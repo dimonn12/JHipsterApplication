@@ -57,7 +57,8 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
     }
 
     public UserDTO(User user) {
-        this(user.getLogin(),
+        this(user.getId(),
+            user.getLogin(),
             null,
             user.getFirstName(),
             user.getLastName(),
@@ -70,7 +71,8 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
             user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
     }
 
-    public UserDTO(String login,
+    public UserDTO(Long id,
+                   String login,
                    String password,
                    String firstName,
                    String lastName,
@@ -81,6 +83,7 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
                    String resetKey,
                    boolean isLocked,
                    Set<String> authorities) {
+        super(id);
         this.login = login;
         this.password = password;
         this.firstName = firstName;

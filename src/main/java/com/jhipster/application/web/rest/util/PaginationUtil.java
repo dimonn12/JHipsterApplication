@@ -16,7 +16,6 @@ import java.net.URISyntaxException;
 public class PaginationUtil {
 
     public static HttpHeaders generatePaginationHttpHeaders(Page<?> page, String baseUrl) throws URISyntaxException {
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", "" + page.getTotalElements());
         String link = "";

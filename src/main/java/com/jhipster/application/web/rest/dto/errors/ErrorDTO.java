@@ -1,6 +1,7 @@
 package com.jhipster.application.web.rest.dto.errors;
 
 import com.jhipster.application.context.status.ErrorStatus;
+import com.jhipster.application.context.status.Status;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class ErrorDTO extends BaseDTO {
         addFieldError(objectName, field, message);
     }
 
-    public void addErrorStatus(ErrorStatus errorStatus) {
+    public void addErrorStatus(Status errorStatus) {
         if(null == errorStatuses) {
             errorStatuses = new ArrayList<>();
         }

@@ -1,8 +1,10 @@
 package com.jhipster.application.security;
 
 import com.jhipster.application.domain.security.PersistentToken;
+import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
+import com.jhipster.application.service.security.UserService;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
     private PersistentTokenRepository persistentTokenRepository;
 
     @Inject
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Inject
     public CustomPersistentRememberMeServices(Environment env,
@@ -105,21 +107,23 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
         String login = successfulAuthentication.getName();
 
         log.debug("Creating new persistent login for user {}", login);
-        PersistentToken token = userRepository.findOneByLogin(login).map(u -> {
-            PersistentToken t = new PersistentToken();
-            t.setSeries(generateSeriesData());
-            t.setUser(u);
-            t.setTokenValue(generateTokenData());
-            t.setTokenDate(new LocalDate());
-            t.setIpAddress(request.getRemoteAddr());
-            t.setUserAgent(request.getHeader("User-Agent"));
-            return t;
-        }).orElseThrow(() -> new UsernameNotFoundException("User " + login + " was not found in the database"));
-        try {
-            persistentTokenRepository.saveAndFlush(token);
-            addCookie(token, request, response);
-        } catch(DataAccessException e) {
-            log.error("Failed to save persistent token ", e);
+        User user = userService.findOneByLogin(login);
+        if (null != user) {
+            PersistentToken token = new PersistentToken();
+            token.setSeries(generateSeriesData());
+            token.setUser(user);
+            token.setTokenValue(generateTokenData());
+            token.setTokenDate(new LocalDate());
+            token.setIpAddress(request.getRemoteAddr());
+            token.setUserAgent(request.getHeader("User-Agent"));
+            try {
+                persistentTokenRepository.saveAndFlush(token);
+                addCookie(token, request, response);
+            } catch(DataAccessException e) {
+                log.error("Failed to save persistent token ", e);
+            }
+        } else {
+            throw new UsernameNotFoundException("User " + login + " was not found in the database");
         }
     }
 

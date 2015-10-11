@@ -35,6 +35,7 @@ public enum ErrorStatusCode {
     USER_NOT_FOUND_BY_ID(4040004, "User not found by User Id"),
     USER_NOT_FOUND_BY_ACTIVATION_KEY(4040005, "User not found by selected activation key"),
     USER_NOT_FOUND_BY_RESET_KEY_ID(4040006, "User not found by Reset Key Id"),
+    RESET_DAY_IS_ELAPSED(4040007, "Reset Day is elapsed"),
     METHOD_NOT_SUPPORTED(4050000, "Method is not supported"),
     CONCURRENCY_CONFLICT(4090000, "Concurrency conflict"),
     ENTITY_EXISTS(4090001, "Such entity already exists"),

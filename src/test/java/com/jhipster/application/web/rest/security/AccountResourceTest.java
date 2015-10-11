@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @IntegrationTest
 public class AccountResourceTest {
 
-    @Inject
+    /*@Inject
     private UserRepository userRepository;
 
     @Inject
@@ -286,5 +286,5 @@ public class AccountResourceTest {
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
             .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
-    }
+    }*/
 }

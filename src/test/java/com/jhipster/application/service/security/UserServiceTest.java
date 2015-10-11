@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class UserServiceTest {
 
-    @Inject
+    /*@Inject
     private PersistentTokenRepository persistentTokenRepository;
 
     @Inject
@@ -183,5 +183,5 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
-    }
+    }*/
 }

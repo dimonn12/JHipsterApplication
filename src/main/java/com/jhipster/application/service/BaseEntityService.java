@@ -11,12 +11,10 @@ import java.io.Serializable;
 public abstract class BaseEntityService<R extends BaseEntityRepository<E, ID>, E extends BaseEntity<E, ID>, D extends BaseEntityDTO<E, ID>, ID extends Serializable>
     extends AbstractService<R, E, ID> {
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public E save(D dto) {
         return this.save(prepareEntityFromDTO(dto));
     }
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public E prepareEntityFromDTO(D dto) {
         if(null == dto) {
             return null;
