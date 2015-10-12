@@ -132,7 +132,7 @@ public class AbstractController<E extends BaseEntity<E, ID>, D extends BaseEntit
     }
 
 
-    protected ResponseEntity<? extends BaseDTO> processError() {
+    private ResponseEntity<? extends BaseDTO> processError() {
         Collection<Status> statuses = getCurrentContext().getAllStatuses();
         return new ResponseEntity<>(getErrorDTO(statuses), getErrorHttpStatus(statuses));
     }

@@ -106,7 +106,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
             return processRequest(HeaderUtil.createEntityUpdateAlert("user", managedUserDTO.getLogin()),
                 new ManagedUserDTO(result));
         }
-        return processError();
+        return processRequest();
     }
 
     /**
@@ -118,6 +118,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
     @Timed
     @Transactional(readOnly = true)
     public ResponseEntity<?> getAllUsers(Pageable pageable) throws URISyntaxException {
+        getLogger().debug("REST request to get all Users: {}", pageable);
         Page<User> page = userService.findAll(pageable);
         List<ManagedUserDTO> managedUserDTOs = page.getContent()
             .stream()
@@ -153,16 +154,13 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<User> search(@PathVariable String query) {
-        return userService.search(query);
+    public ResponseEntity<?> search(@PathVariable String query) {
+        getLogger().debug("REST request to search by query={}", query);
+        return processRequest(userService.search(query));
     }
 
     protected User getById(Long id) {
         return userService.findById(id);
-    }
-
-    protected UserDTO getDTO(User entity) {
-        return new UserDTO(entity);
     }
 
     protected User getEntity(UserDTO dto) {

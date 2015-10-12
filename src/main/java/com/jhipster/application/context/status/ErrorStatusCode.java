@@ -18,6 +18,7 @@ public enum ErrorStatusCode {
     EMAIL_ALREADY_IN_USE(4000001, "E-mail address is already in use"),
     LOGIN_ALREADY_IN_USE(4000002, "Login is already in use"),
     INCORRECT_PASSWORD(4000003, "Incorrect password"),
+    PASSWORD_IS_TOO_WEAK(4000003, "Password is too weak"),
     USER_IS_LOCKED(4000011, "User is locked"),
     USER_NOT_ACTIVATED(4000012, "User is not active"),
     VALIDATION_ERROR(4000100, "Validation error"),
