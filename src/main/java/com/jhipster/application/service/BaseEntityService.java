@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 
 public abstract class BaseEntityService<R extends BaseEntityRepository<E, ID>, E extends BaseEntity<E, ID>, D extends BaseEntityDTO<E, ID>, ID extends Serializable>
-    extends AbstractService<R, E, ID> {
+    extends EntityService<R, E, ID> {
 
     public E save(D dto) {
         return this.save(prepareEntityFromDTO(dto));

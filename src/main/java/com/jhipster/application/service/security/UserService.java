@@ -6,7 +6,7 @@ import com.jhipster.application.repository.search.UserSearchRepository;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.SecurityUtils;
-import com.jhipster.application.service.AbstractService;
+import com.jhipster.application.service.EntityService;
 import com.jhipster.application.service.util.RandomUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -27,7 +27,7 @@ import static org.elasticsearch.index.query.QueryBuilders.queryString;
  * Service class for managing users.
  */
 @Service
-public class UserService extends AbstractService<UserRepository, User, Long> {
+public class UserService extends EntityService<UserRepository, User, Long> {
 
     @Inject
     private PasswordEncoder passwordEncoder;

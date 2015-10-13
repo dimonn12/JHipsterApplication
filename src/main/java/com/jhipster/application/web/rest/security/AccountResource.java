@@ -2,11 +2,10 @@ package com.jhipster.application.web.rest.security;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jhipster.application.context.status.ErrorStatusCode;
-import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
-import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.security.SecurityUtils;
 import com.jhipster.application.service.mail.MailService;
+import com.jhipster.application.service.security.PersistentTokenService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.AbstractController;
 import com.jhipster.application.web.rest.dto.BaseDTO;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -43,7 +41,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
     private UserService userService;
 
     @Inject
-    private PersistentTokenRepository persistentTokenRepository;
+    private PersistentTokenService persistentTokenService;
 
     @Inject
     private MailService mailService;
@@ -152,6 +150,8 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
             } else {
                 addError(ErrorStatusCode.INVALID_ENTITY);
             }
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
         return processRequest();
     }
@@ -180,12 +180,15 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<List<PersistentToken>> getCurrentSessions() {
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+    public ResponseEntity<?> getCurrentSessions() {
+        getLogger().debug("REST request to get current session: {}", SecurityUtils.getCurrentLogin());
+        User user = userService.findOneByLogin(SecurityUtils.getCurrentLogin());
         if(null != user) {
-            return new ResponseEntity<>(persistentTokenRepository.findByUser(user), HttpStatus.OK);
+            return processRequest(persistentTokenService.findByUser(user));
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return processRequest();
     }
 
     /**
