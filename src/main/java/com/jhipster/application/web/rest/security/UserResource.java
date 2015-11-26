@@ -3,13 +3,15 @@ package com.jhipster.application.web.rest.security;
 import com.codahale.metrics.annotation.Timed;
 import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.security.User;
+import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.security.AuthoritiesConstants;
 import com.jhipster.application.service.security.AuthorityService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.AbstractController;
-import com.jhipster.application.web.rest.dto.BaseDTO;
 import com.jhipster.application.web.rest.dto.security.ManagedUserDTO;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
+import com.jhipster.application.web.rest.processor.container.HttpHeadersContainer;
+import com.jhipster.application.web.rest.processor.container.URIBodyContainer;
 import com.jhipster.application.web.rest.util.HeaderUtil;
 import com.jhipster.application.web.rest.util.PaginationUtil;
 import org.slf4j.LoggerFactory;
@@ -17,9 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,17 +78,22 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
-    public ResponseEntity<? extends BaseDTO> createUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
-        getLogger().debug("REST request to save User : {}", userDTO);
+    @RestResponse(type = RestResponse.ResponseReturnType.URI_CONTAINER)
+    public URIBodyContainer createUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
+        getLogger().debug("REST request to save User: {}", userDTO);
         if(null != userDTO.getId()) {
             addError(ErrorStatusCode.ENTITY_ALREADY_HAS_AN_ID);
         } else {
             User result = userService.addNewUser(getEntity(userDTO));
             if(null != result) {
-                return processRequest(new URI("/api/users/" + result.getId()), result, userDTO);
+                return new URIBodyContainer(new URI("/api/users/" + result.getId()),
+                    HeaderUtil.createEntityCreationAlert("User", result.getId().toString()),
+                    new ManagedUserDTO(result));
+            } else {
+                addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
             }
         }
-        return processRequest();
+        return null;
     }
 
     /**
@@ -97,16 +103,16 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @Transactional
     @Secured(AuthoritiesConstants.ADMIN)
-    public ResponseEntity<?> updateUser(@RequestBody ManagedUserDTO managedUserDTO) throws URISyntaxException {
-        getLogger().debug("REST request to update User : {}", managedUserDTO);
+    @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
+    public HttpHeadersContainer updateUser(@RequestBody ManagedUserDTO managedUserDTO) throws URISyntaxException {
+        getLogger().debug("REST request to update User: {}", managedUserDTO);
         User result = userService.save(getEntity(managedUserDTO));
         if(null != result) {
-            return processRequest(HeaderUtil.createEntityUpdateAlert("user", managedUserDTO.getLogin()),
-                new ManagedUserDTO(result));
+            HttpHeaders headers = HeaderUtil.createEntityUpdateAlert("user", managedUserDTO.getLogin());
+            return new HttpHeadersContainer(headers, new ManagedUserDTO(result));
         }
-        return processRequest();
+        return null;
     }
 
     /**
@@ -116,8 +122,8 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @Transactional(readOnly = true)
-    public ResponseEntity<?> getAllUsers(Pageable pageable) throws URISyntaxException {
+    @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
+    public HttpHeadersContainer getAllUsers(Pageable pageable) throws URISyntaxException {
         getLogger().debug("REST request to get all Users: {}", pageable);
         Page<User> page = userService.findAll(pageable);
         List<ManagedUserDTO> managedUserDTOs = page.getContent()
@@ -125,7 +131,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
             .map(user -> new ManagedUserDTO(user))
             .collect(Collectors.toList());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-        return processRequest(headers, managedUserDTOs);
+        return new HttpHeadersContainer(headers, managedUserDTOs);
     }
 
     /**
@@ -135,15 +141,16 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<? extends BaseDTO> getUser(@PathVariable String login) {
-        getLogger().debug("REST request to get User : {}", login);
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public ManagedUserDTO getUser(@PathVariable String login) {
+        getLogger().debug("REST request to get User: login={}", login);
         User user = userService.getUserWithAuthoritiesByLogin(login);
         if(null != user) {
-            return processRequest(new ManagedUserDTO(user));
+            return new ManagedUserDTO(user);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return processRequest();
+        return null;
     }
 
     /**
@@ -154,16 +161,33 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> search(@PathVariable String query) {
+    @RestResponse(type = RestResponse.ResponseReturnType.LIST)
+    public List<UserDTO> search(@PathVariable String query) {
         getLogger().debug("REST request to search by query={}", query);
-        return processRequest(userService.search(query));
+        return getDTOs(userService.search(query));
     }
 
     protected User getById(Long id) {
         return userService.findById(id);
     }
 
+    protected List<UserDTO> getDTOs(List<User> users) {
+        List<UserDTO> result = new ArrayList<>();
+        users.forEach(entity -> result.add(getDTO(entity)));
+        return result;
+    }
+
+    protected UserDTO getDTO(User entity) {
+        if(null == entity) {
+            return null;
+        }
+        return new UserDTO(entity);
+    }
+
     protected User getEntity(UserDTO dto) {
+        if(null == dto) {
+            return null;
+        }
         User user = null;
         if(null != dto.getId()) {
             user = getById(dto.getId());

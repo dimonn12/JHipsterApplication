@@ -2,20 +2,19 @@ package com.jhipster.application.web.rest.security;
 
 import com.codahale.metrics.annotation.Timed;
 import com.jhipster.application.context.status.ErrorStatusCode;
+import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
+import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.security.SecurityUtils;
 import com.jhipster.application.service.mail.MailService;
 import com.jhipster.application.service.security.PersistentTokenService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.AbstractController;
-import com.jhipster.application.web.rest.dto.BaseDTO;
 import com.jhipster.application.web.rest.dto.security.KeyAndPasswordDTO;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.
@@ -57,18 +58,18 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.POST,
                     produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity<? extends BaseDTO> registerAccount(@Valid @RequestBody UserDTO userDTO,
-                                                             HttpServletRequest request) {
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public UserDTO registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
         getLogger().debug("REST request to register new Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
             addError(ErrorStatusCode.LOGIN_ALREADY_IN_USE);
-            return processRequest();
+            return null;
         }
         user = userService.findOneByEmail(userDTO.getEmail());
         if(null != user) {
             addError(ErrorStatusCode.EMAIL_ALREADY_IN_USE);
-            return processRequest();
+            return null;
         }
         user = userService.createUserInformation(userDTO.getLogin(),
             userDTO.getPassword(),
@@ -83,10 +84,8 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                              ":" +                                  // ":"
                              request.getServerPort();               // "80"
             mailService.sendActivationEmail(user, baseUrl);
-            return processRequest(user, userDTO);
-        } else {
-            return processRequest();
         }
+        return getDTO(user);
     }
 
     /**
@@ -96,10 +95,10 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> activateAccount(@RequestParam(value = "key") String key) {
-        getLogger().debug("REST request to activate Account by key={}", key);
-        userService.activateRegistration(key);
-        return processRequest();
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public UserDTO activateAccount(@RequestParam(value = "key") String key) {
+        getLogger().debug("REST request to activate Account by key: key={}", key);
+        return getDTO(userService.activateRegistration(key));
     }
 
     /**
@@ -109,9 +108,10 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<String> isAuthenticated(HttpServletRequest request) {
+    @RestResponse(type = RestResponse.ResponseReturnType.STRING)
+    public String isAuthenticated(HttpServletRequest request) {
         getLogger().debug("REST request to check if the current user is authenticated");
-        return new ResponseEntity<>(request.getRemoteUser(), HttpStatus.OK);
+        return request.getRemoteUser();
     }
 
     /**
@@ -121,14 +121,14 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<? extends BaseDTO> getAccount() {
-        getLogger().debug("REST request to get current Account: {}", SecurityUtils.getCurrentLogin());
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public UserDTO getAccount() {
+        getLogger().debug("REST request to get current Account: login={}", SecurityUtils.getCurrentLogin());
         User user = userService.getUserWithAuthorities();
-        if(null != user) {
-            return processRequest(getDTO(user));
-        } else {
-            return processRequest();
+        if(null == user) {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
+        return getDTO(user);
     }
 
     /**
@@ -138,22 +138,23 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> saveAccount(@RequestBody UserDTO userDTO) {
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public UserDTO saveAccount(@RequestBody UserDTO userDTO) {
         getLogger().debug("REST request to save Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
             if(Objects.equals(user.getLogin(), SecurityUtils.getCurrentLogin())) {
-                userService.updateUserInformation(userDTO.getFirstName(),
+                return getDTO(userService.updateUserInformation(userDTO.getFirstName(),
                     userDTO.getLastName(),
                     userDTO.getEmail(),
-                    userDTO.getLangKey());
+                    userDTO.getLangKey()));
             } else {
                 addError(ErrorStatusCode.INVALID_ENTITY);
             }
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return processRequest();
+        return null;
     }
 
     /**
@@ -163,14 +164,14 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> changePassword(@RequestBody String password) {
-        getLogger().debug("REST request to change password: {}", SecurityUtils.getCurrentLogin());
+    @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
+    public void changePassword(@RequestBody String password) {
+        getLogger().debug("REST request to change password: login={}", SecurityUtils.getCurrentLogin());
         if(!checkPasswordLength(password)) {
             addError(ErrorStatusCode.PASSWORD_IS_TOO_WEAK);
         } else {
             userService.changePassword(password);
         }
-        return processRequest();
     }
 
     /**
@@ -180,15 +181,14 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> getCurrentSessions() {
-        getLogger().debug("REST request to get current session: {}", SecurityUtils.getCurrentLogin());
+    @RestResponse(type = RestResponse.ResponseReturnType.LIST)
+    public List<PersistentToken> getCurrentSessions() {
+        getLogger().debug("REST request to get current session: login={}", SecurityUtils.getCurrentLogin());
         User user = userService.findOneByLogin(SecurityUtils.getCurrentLogin());
-        if(null != user) {
-            return processRequest(persistentTokenService.findByUser(user));
-        } else {
+        if(null == user) {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return processRequest();
+        return persistentTokenService.findByUser(user);
     }
 
     /**
@@ -206,15 +206,23 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
     @RequestMapping(value = "/account/sessions/{series}",
                     method = RequestMethod.DELETE)
     @Timed
+    @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
     public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
+        getLogger().debug("REST request to invalidate session: login={}, series={}",
+            SecurityUtils.getCurrentLogin(),
+            series);
         String decodedSeries = URLDecoder.decode(series, "UTF-8");
-        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin());
+        User user = userService.findOneByLogin(SecurityUtils.getCurrentLogin());
         if(null != user) {
-            persistentTokenRepository.findByUser(user)
+            Optional<PersistentToken> token = persistentTokenService.findByUser(user)
                 .stream()
                 .filter(persistentToken -> StringUtils.equals(persistentToken.getSeries(), decodedSeries))
-                .findAny()
-                .ifPresent(t -> persistentTokenRepository.delete(decodedSeries));
+                .findAny();
+            if(!token.isPresent()) {
+                addError(ErrorStatusCode.PERSISTENT_TOKEN_NOT_FOUND);
+            } else {
+                token.ifPresent(t -> persistentTokenService.delete(decodedSeries));
+            }
         }
     }
 
@@ -222,8 +230,9 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.POST,
                     produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
-    public ResponseEntity<?> requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
-
+    @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
+    public void requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
+        getLogger().debug("REST request to request password reset by email: email={}", mail);
         User user = userService.requestPasswordReset(mail);
         if(null != user) {
             String baseUrl = request.getScheme() +
@@ -232,26 +241,30 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                              ":" +
                              request.getServerPort();
             mailService.sendPasswordResetMail(user, baseUrl);
-            return new ResponseEntity<>("e-mail was sent", HttpStatus.OK);
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_EMAIL);
         }
-        return new ResponseEntity<>("e-mail address not registered", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/account/reset_password/finish",
                     method = RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<?> finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
-        getLogger().debug("REST request to finish password reset: {}", SecurityUtils.getCurrentLogin());
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public UserDTO finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
+        getLogger().debug("REST request to finish password reset: login={}", SecurityUtils.getCurrentLogin());
         if(!checkPasswordLength(keyAndPassword.getNewPassword())) {
             addError(ErrorStatusCode.INCORRECT_PASSWORD);
         } else {
-            userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
+            return getDTO(userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey()));
         }
-        return processRequest();
+        return null;
     }
 
     protected UserDTO getDTO(User entity) {
+        if(null == entity) {
+            return null;
+        }
         return new UserDTO(entity);
     }
 

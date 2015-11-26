@@ -137,7 +137,7 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     }
 
     @Transactional
-    public void updateUserInformation(String firstName, String lastName, String email, String langKey) {
+    public User updateUserInformation(String firstName, String lastName, String email, String langKey) {
         User user = findOneByLogin(SecurityUtils.getCurrentLogin());
         if(null != user) {
             user.setFirstName(firstName);
@@ -147,10 +147,14 @@ public class UserService extends EntityService<UserRepository, User, Long> {
             user = saveUser(user);
             if(null != user) {
                 logger.debug("Changed Information for User: {}", user);
+                return user;
+            } else {
+                addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
             }
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
+        return null;
     }
 
     @Override

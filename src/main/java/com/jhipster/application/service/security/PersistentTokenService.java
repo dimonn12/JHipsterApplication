@@ -33,4 +33,8 @@ public class PersistentTokenService extends AbstractService{
         return result;
     }
 
+    public void delete(String series) {
+        persistentTokenRepository.delete(series);
+    }
+
 }

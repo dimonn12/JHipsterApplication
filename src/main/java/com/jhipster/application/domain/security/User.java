@@ -226,4 +226,9 @@ public class User extends SoftDeletedEntity<User, Long> implements Serializable 
         return this.login.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return baseToString("persistentTokens", "authorities");
+    }
+
 }

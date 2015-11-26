@@ -38,6 +38,7 @@ public enum ErrorStatusCode {
     USER_NOT_FOUND_BY_RESET_KEY_ID(4040006, "User not found by Reset Key Id"),
     RESET_DAY_IS_ELAPSED(4040007, "Reset Day is elapsed"),
     AUTHORITY_NOT_FOUND(4040008, "Authority not found"),
+    PERSISTENT_TOKEN_NOT_FOUND(4040009, "Persistent Token not found"),
     METHOD_NOT_SUPPORTED(4050000, "Method is not supported"),
     CONCURRENCY_CONFLICT(4090000, "Concurrency conflict"),
     ENTITY_EXISTS(4090001, "Such entity already exists"),
