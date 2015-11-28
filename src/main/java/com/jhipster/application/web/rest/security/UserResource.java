@@ -79,7 +79,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.URI_CONTAINER)
-    public URIBodyContainer createUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
+    public Object createUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
         getLogger().debug("REST request to save User: {}", userDTO);
         if(null != userDTO.getId()) {
             addError(ErrorStatusCode.ENTITY_ALREADY_HAS_AN_ID);
@@ -105,7 +105,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
-    public HttpHeadersContainer updateUser(@RequestBody ManagedUserDTO managedUserDTO) throws URISyntaxException {
+    public Object updateUser(@RequestBody ManagedUserDTO managedUserDTO) throws URISyntaxException {
         getLogger().debug("REST request to update User: {}", managedUserDTO);
         User result = userService.save(getEntity(managedUserDTO));
         if(null != result) {
@@ -123,7 +123,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
-    public HttpHeadersContainer getAllUsers(Pageable pageable) throws URISyntaxException {
+    public Object getAllUsers(Pageable pageable) throws URISyntaxException {
         getLogger().debug("REST request to get all Users: {}", pageable);
         Page<User> page = userService.findAll(pageable);
         List<ManagedUserDTO> managedUserDTOs = page.getContent()
@@ -142,7 +142,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public ManagedUserDTO getUser(@PathVariable String login) {
+    public Object getUser(@PathVariable String login) {
         getLogger().debug("REST request to get User: login={}", login);
         User user = userService.getUserWithAuthoritiesByLogin(login);
         if(null != user) {
@@ -162,7 +162,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.LIST)
-    public List<UserDTO> search(@PathVariable String query) {
+    public Object search(@PathVariable String query) {
         getLogger().debug("REST request to search by query={}", query);
         return getDTOs(userService.search(query));
     }

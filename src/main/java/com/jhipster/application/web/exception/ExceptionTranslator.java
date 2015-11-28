@@ -5,6 +5,8 @@ import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.security.UserIsLockedException;
 import com.jhipster.application.security.UserNotActivatedException;
 import com.jhipster.application.web.rest.dto.errors.ErrorDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,10 +28,13 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionTranslator {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ExceptionTranslator.class);
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ErrorDTO processException(Exception e) {
+        LOG.error("Exception caught", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.INTERNAL_SERVER_ERROR));
     }
 
@@ -37,6 +42,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorDTO processConcurrencyError(ConcurrencyFailureException ex) {
+        LOG.error("Exception caught", ex);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.CONCURRENCY_CONFLICT));
     }
 
@@ -44,6 +50,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processAccessDeniedException(AccessDeniedException e) {
+        LOG.error("Exception caught", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.FORBIDDEN));
     }
 
@@ -51,6 +58,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserIsLocked(UserIsLockedException e) {
+        LOG.error("Exception caught", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_IS_LOCKED));
     }
 
@@ -58,6 +66,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserNotActivated(UserNotActivatedException e) {
+        LOG.error("Exception caught", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_NOT_ACTIVATED));
     }
 
@@ -65,6 +74,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserNotFound(UsernameNotFoundException e) {
+        LOG.error("Exception caught", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN));
     }
 
@@ -72,6 +82,7 @@ public class ExceptionTranslator {
     @ResponseBody
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorDTO processMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
+        LOG.error("Exception caught", exception);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.METHOD_NOT_SUPPORTED));
     }
 
@@ -79,6 +90,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorDTO processValidationError(MethodArgumentNotValidException ex) {
+        LOG.error("Exception caught", ex);
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
         return processFieldErrors(fieldErrors);

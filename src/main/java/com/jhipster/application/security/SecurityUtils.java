@@ -48,10 +48,11 @@ public final class SecurityUtils {
         if(null != auth) {
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
             if(null != authorities) {
-                return containsAnonymous(authorities);
+                return !containsAnonymous(authorities);
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

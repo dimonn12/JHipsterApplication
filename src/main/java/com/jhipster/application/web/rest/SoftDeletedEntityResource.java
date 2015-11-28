@@ -28,7 +28,7 @@ public abstract class SoftDeletedEntityResource<S extends BaseEntityService<R, E
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public D create(@RequestBody D dto) {
+    public Object create(@RequestBody D dto) {
         getLogger().debug(REST_REQUEST.concat(" to save ").concat(this.entityName).concat(": {}"), dto);
         if(null != dto.getId()) {
             addError(ErrorStatusCode.ENTITY_ALREADY_HAS_AN_ID);
@@ -46,7 +46,7 @@ public abstract class SoftDeletedEntityResource<S extends BaseEntityService<R, E
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.LIST)
-    public List<D> getAll() {
+    public Object getAll() {
         getLogger().debug(REST_REQUEST.concat(" to get all ").concat(this.entityName).concat("s"));
         List<E> entityList = getService().findAll();
         return getDTOs(entityList);

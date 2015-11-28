@@ -1,31 +1,25 @@
 package com.jhipster.application.postprocessor;
 
 import com.jhipster.application.aop.rest.AdviceFactory;
-import com.jhipster.application.domain.BaseEntity;
+import com.jhipster.application.aop.rest.RestResponseMethodInterceptor;
 import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.web.rest.AbstractController;
-import com.jhipster.application.web.rest.dto.BaseDTO;
-import com.jhipster.application.web.rest.dto.BaseEntityDTO;
 import com.jhipster.application.web.rest.processor.RequestProcessor;
-import com.jhipster.application.web.rest.processor.container.HttpHeadersContainer;
-import com.jhipster.application.web.rest.processor.container.URIBodyContainer;
 import org.aopalliance.aop.Advice;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.Advisor;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.List;
 
 
 /**
@@ -36,8 +30,7 @@ public class RestControllerAnnotationBeanPostProcessor implements BeanPostProces
 
     private static final Logger LOG = LoggerFactory.getLogger(RestControllerAnnotationBeanPostProcessor.class);
 
-    @Inject
-    private RequestProcessor requestProcessor;
+    public static final Pointcut POINTCUT = new AnnotationMatchingPointcut(null, RestResponse.class);
 
     @Inject
     private AdviceFactory adviceFactory;
@@ -50,6 +43,31 @@ public class RestControllerAnnotationBeanPostProcessor implements BeanPostProces
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if(bean instanceof AbstractController) {
+            final Class<?> targetClass = AopUtils.getTargetClass(bean);
+
+            if(AopUtils.canApply(POINTCUT, targetClass)) {
+                final Advice advice = adviceFactory.getRestResponseAdvice(bean, targetClass);
+                final Advisor advisor = new DefaultPointcutAdvisor(POINTCUT, advice);
+
+                if(bean instanceof Advised) {
+                    LOG.info("Bean {} is already proxied, adding Advisor to existing proxy", beanName);
+                    Advised advisedBean = (Advised)bean;
+                    advisedBean.addAdvisor(advisor);
+                    return bean;
+                } else {
+                    LOG.info("Proxying bean {} of type {}", beanName, targetClass.getCanonicalName());
+                    final ProxyFactory proxyFactory = new ProxyFactory(bean);
+                    proxyFactory.addAdvisor(advisor);
+
+                    final Object proxy = proxyFactory.getProxy(this.getClass().getClassLoader());
+                    return proxy;
+                }
+            }
+        }
+
+        return bean;
+    }
+        /*if(bean instanceof AbstractController) {
             final Class<?> targetClass = AopUtils.getTargetClass(bean);
 
             if(AopUtils.canApply(pointcut, targetClass)) {
@@ -142,6 +160,7 @@ public class RestControllerAnnotationBeanPostProcessor implements BeanPostProces
                 }
             }
             return bean;
-        }
+        }*/
+
 
     }

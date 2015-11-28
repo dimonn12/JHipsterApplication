@@ -12,6 +12,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.inject.Inject;
 
@@ -34,27 +35,31 @@ public class UserCreationStrategyTest {
     @Before
     public void doSetup() {
         userCreationStrategy = new DefaultUserCreationStrategyImpl();
+        ReflectionTestUtils.setField(userCreationStrategy, "authorityRepository", authorityRepository);
     }
 
     @Test
     public void testDefaultAuthorities() {
         User user = userCreationStrategy.createNewUserWithDefaultAuthorities();
         Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        assertThat(user.getAuthorities().contains(userAuthority));
+        assertThat(user.getAuthorities().contains(userAuthority)).isTrue();
     }
 
     @Test
     public void testUserAuthorities() {
         User user = userCreationStrategy.createNewUserWithUserAuthorities();
         Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
-        assertThat(user.getAuthorities().contains(userAuthority));
+        assertThat(user.getAuthorities().contains(userAuthority)).isTrue();
     }
 
     @Test
     public void testAdminAuthorities() {
-        User user = userCreationStrategy.createNewUserWithUserAuthorities();
-        Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.ADMIN);
-        assertThat(user.getAuthorities().contains(userAuthority));
+        User user = userCreationStrategy.createNewUserWithAdminAuthorities();
+        Authority userAuthority = authorityRepository.findOne(AuthoritiesConstants.USER);
+        assertThat(user.getAuthorities().contains(userAuthority)).isFalse();
+
+        Authority adminAuthority = authorityRepository.findOne(AuthoritiesConstants.ADMIN);
+        assertThat(user.getAuthorities().contains(adminAuthority)).isTrue();
     }
 
 }

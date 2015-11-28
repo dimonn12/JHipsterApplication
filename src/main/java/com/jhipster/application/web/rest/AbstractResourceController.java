@@ -41,7 +41,7 @@ public abstract class AbstractResourceController<S extends EntityService<R, E, I
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public D updateById(@PathVariable ID id, @RequestBody D dto) {
+    public Object updateById(@PathVariable ID id, @RequestBody D dto) {
         getLogger().debug(REST_REQUEST.concat(" to update by Id ").concat(this.entityName).concat(": id={}, {}"),
             id,
             dto);
@@ -58,7 +58,7 @@ public abstract class AbstractResourceController<S extends EntityService<R, E, I
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public D get(@PathVariable ID id) {
+    public Object get(@PathVariable ID id) {
         getLogger().debug(REST_REQUEST.concat(" to get by Id ").concat(this.entityName).concat(": id={}"), id);
         E entity = getById(id);
         if(null != entity) {

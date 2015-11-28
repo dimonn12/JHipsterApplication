@@ -59,7 +59,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public UserDTO registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
+    public Object registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
         getLogger().debug("REST request to register new Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
@@ -96,7 +96,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public UserDTO activateAccount(@RequestParam(value = "key") String key) {
+    public Object activateAccount(@RequestParam(value = "key") String key) {
         getLogger().debug("REST request to activate Account by key: key={}", key);
         return getDTO(userService.activateRegistration(key));
     }
@@ -109,7 +109,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.STRING)
-    public String isAuthenticated(HttpServletRequest request) {
+    public Object isAuthenticated(HttpServletRequest request) {
         getLogger().debug("REST request to check if the current user is authenticated");
         return request.getRemoteUser();
     }
@@ -122,7 +122,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public UserDTO getAccount() {
+    public Object getAccount() {
         getLogger().debug("REST request to get current Account: login={}", SecurityUtils.getCurrentLogin());
         User user = userService.getUserWithAuthorities();
         if(null == user) {
@@ -139,7 +139,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public UserDTO saveAccount(@RequestBody UserDTO userDTO) {
+    public Object saveAccount(@RequestBody UserDTO userDTO) {
         getLogger().debug("REST request to save Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
@@ -182,7 +182,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.LIST)
-    public List<PersistentToken> getCurrentSessions() {
+    public Object getCurrentSessions() {
         getLogger().debug("REST request to get current session: login={}", SecurityUtils.getCurrentLogin());
         User user = userService.findOneByLogin(SecurityUtils.getCurrentLogin());
         if(null == user) {
@@ -251,7 +251,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public UserDTO finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
+    public Object finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
         getLogger().debug("REST request to finish password reset: login={}", SecurityUtils.getCurrentLogin());
         if(!checkPasswordLength(keyAndPassword.getNewPassword())) {
             addError(ErrorStatusCode.INCORRECT_PASSWORD);
