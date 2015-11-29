@@ -1,10 +1,10 @@
 package com.jhipster.application.web.rest.dto.errors;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jhipster.application.context.status.ErrorStatus;
 import com.jhipster.application.context.status.Status;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,4 +55,11 @@ public class ErrorDTO extends BaseDTO {
         return fieldErrors;
     }
 
+    @Override
+    public String toString() {
+        return "ErrorDTO{" +
+               "errorStatuses=" + errorStatuses +
+               ", fieldErrors=" + fieldErrors +
+               '}';
+    }
 }

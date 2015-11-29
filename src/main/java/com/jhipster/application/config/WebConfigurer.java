@@ -151,7 +151,6 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
      * Initializes the static resources production Filter.
      */
     private void initStaticResourcesProductionFilter(ServletContext servletContext, EnumSet<DispatcherType> disps) {
-
         log.debug("Registering static resources production Filter");
         FilterRegistration.Dynamic staticResourcesProductionFilter = servletContext.addFilter(
             "staticResourcesProductionFilter",

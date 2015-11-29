@@ -1,25 +1,17 @@
 package com.jhipster.application.web.rest.security;
 
-import com.jhipster.application.Application;
-import com.jhipster.application.repository.security.UserRepository;
-import com.jhipster.application.service.security.UserService;
-import com.jhipster.application.web.rest.security.UserResource;
-import org.junit.Before;
+import com.jhipster.application.context.status.ErrorStatusCode;
+import com.jhipster.application.domain.security.User;
+import com.jhipster.application.web.rest.AbstractControllerTest;
+import com.jhipster.application.web.rest.dto.security.UserDTO;
+import org.hamcrest.core.StringContains;
+import org.json.JSONArray;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.ResultActions;
 
-import javax.inject.Inject;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,39 +20,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see UserResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@IntegrationTest
-public class UserResourceTest {
-
-    @Inject
-    private UserRepository userRepository;
-
-    @Inject
-    private UserService userService;
-
-    private MockMvc restUserMockMvc;
-
-    @Before
-    public void setup() {
-        UserResource userResource = new UserResource();
-        ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
-        ReflectionTestUtils.setField(userResource, "userService", userService);
-        this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
-    }
+public class UserResourceTest extends AbstractControllerTest<UserResource, User, UserDTO, Long> {
 
     @Test
     public void testGetExistingUser() throws Exception {
-        restUserMockMvc.perform(get("/api/users/admin").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"))
+        ResultActions ra = sendGet("/api/users/admin");
+        ra.andExpect(status().isOk())
             .andExpect(jsonPath("$.lastName").value("Administrator"));
+        afterTestOccurred();
     }
 
     @Test
     public void testGetUnknownUser() throws Exception {
-        restUserMockMvc.perform(get("/api/users/unknown").accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNotFound());
+        ResultActions ra = sendGet("/api/users/unknown");
+        ra.andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.errorStatuses[0].code").value(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN.getCode()));
+        afterTestOccurred();
+    }
+
+    @Test
+    public void testGetAllUsers() throws Exception {
+        ResultActions ra = sendGet("/api/users");
+        ra.andExpect(status().isOk());
+        afterTestOccurred();
+    }
+
+    @Test
+    public void testSimplePagination() throws Exception {
+        ResultActions ra = sendGet("/api/users?page=0&size=1");
+        ra.andExpect(status().isOk())
+            .andExpect(header().string("Link",
+                StringContains.containsString("</api/users?page=1&size=1>; rel=\"next\"")))
+            .andExpect(header().string("Link",
+                StringContains.containsString("</api/users?page=0&size=1>; rel=\"first\"")));
+        JSONArray json = new JSONArray(ra.andReturn().getResponse().getContentAsString());
+        Assert.assertEquals(json.length(), 1);
+        afterTestOccurred();
     }
 }

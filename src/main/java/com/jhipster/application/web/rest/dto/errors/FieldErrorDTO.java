@@ -2,8 +2,6 @@ package com.jhipster.application.web.rest.dto.errors;
 
 import com.jhipster.application.web.rest.dto.BaseDTO;
 
-import java.io.Serializable;
-
 public class FieldErrorDTO extends BaseDTO {
 
     private static final long serialVersionUID = 1L;
@@ -28,6 +26,15 @@ public class FieldErrorDTO extends BaseDTO {
 
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return "FieldErrorDTO{" +
+               "objectName='" + objectName + '\'' +
+               ", field='" + field + '\'' +
+               ", message='" + message + '\'' +
+               '}';
     }
 
 }

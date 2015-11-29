@@ -158,7 +158,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/protected/**")
             .authenticated();
-
     }
 
     @Bean

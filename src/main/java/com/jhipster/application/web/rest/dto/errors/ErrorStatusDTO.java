@@ -3,8 +3,6 @@ package com.jhipster.application.web.rest.dto.errors;
 import com.jhipster.application.context.status.Status;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 
-import java.io.Serializable;
-
 /**
  * Created by dimonn12 on 10.10.2015.
  */
@@ -25,5 +23,14 @@ public class ErrorStatusDTO extends BaseDTO {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorStatusDTO{" +
+               "code=" + code +
+               ", message='" + message + '\'' +
+               '}';
+    }
+
 
 }

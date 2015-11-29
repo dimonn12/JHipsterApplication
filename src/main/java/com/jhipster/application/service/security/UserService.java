@@ -10,6 +10,8 @@ import com.jhipster.application.service.EntityService;
 import com.jhipster.application.service.util.RandomUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,26 @@ public class UserService extends EntityService<UserRepository, User, Long> {
 
     @Inject
     private UserCreationStrategy userCreationStrategy;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<User> findAll() {
+        List<User> result = super.findAll();
+        result.forEach(user -> {
+            user.getAuthorities().size();
+        });
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<User> findAll(Pageable pageable) {
+        Page<User> result = super.findAll(pageable);
+        result.forEach(user -> {
+            user.getAuthorities().size();
+        });
+        return result;
+    }
 
     @Transactional
     public User activateRegistration(String key) {

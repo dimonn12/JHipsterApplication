@@ -82,7 +82,6 @@ public class Application {
             env.getProperty("server.port"),
             InetAddress.getLocalHost().getHostAddress(),
             env.getProperty("server.port"));
-
     }
 
     /**
@@ -91,7 +90,6 @@ public class Application {
     private static void addDefaultProfile(SpringApplication app, SimpleCommandLinePropertySource source) {
         if(!source.containsProperty("spring.profiles.active") &&
            !System.getenv().containsKey("SPRING_PROFILES_ACTIVE")) {
-
             app.setAdditionalProfiles(Constants.SPRING_PROFILE_DEVELOPMENT);
         }
     }
@@ -107,4 +105,5 @@ public class Application {
                                                       "liquibase.structure,liquibase.structurecompare,liquibase.lockservice," +
                                                       "liquibase.ext,liquibase.changelog");
     }
+
 }

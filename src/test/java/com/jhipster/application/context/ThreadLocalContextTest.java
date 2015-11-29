@@ -1,16 +1,9 @@
 package com.jhipster.application.context;
 
-import com.jhipster.application.Application;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +39,7 @@ public class ThreadLocalContextTest {
         threadToTest.forEach(thread -> {
             thread.start();
         });
-        while (finishedThreadCount < threadCount - 1) {
+        while(finishedThreadCount < threadCount - 1) {
             try {
                 Thread.sleep((long)(100));
             } catch(InterruptedException e) {
