@@ -34,7 +34,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ErrorDTO processException(Exception e) {
-        LOG.error("Exception caught", e);
+        LOG.error("Exception caught: ", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.INTERNAL_SERVER_ERROR));
     }
 
@@ -42,7 +42,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     public ErrorDTO processConcurrencyError(ConcurrencyFailureException ex) {
-        LOG.error("Exception caught", ex);
+        LOG.error("Concurrency Failure Exception. Will return Conflict 409: ", ex);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.CONCURRENCY_CONFLICT));
     }
 
@@ -50,7 +50,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processAccessDeniedException(AccessDeniedException e) {
-        LOG.error("Exception caught", e);
+        LOG.error("Access Denied: {}", e.getMessage());
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.FORBIDDEN));
     }
 
@@ -58,7 +58,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserIsLocked(UserIsLockedException e) {
-        LOG.error("Exception caught", e);
+        LOG.error("User is locked: ", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_IS_LOCKED));
     }
 
@@ -66,7 +66,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserNotActivated(UserNotActivatedException e) {
-        LOG.error("Exception caught", e);
+        LOG.error("User is not active: ", e);
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_NOT_ACTIVATED));
     }
 
@@ -74,7 +74,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     public ErrorDTO processUserNotFound(UsernameNotFoundException e) {
-        LOG.error("Exception caught", e);
+        LOG.error("User not found by login: {}", e.getMessage());
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN));
     }
 
@@ -82,7 +82,7 @@ public class ExceptionTranslator {
     @ResponseBody
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorDTO processMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
-        LOG.error("Exception caught", exception);
+        LOG.error("HttpRequest Method Not Supported: {}", exception.getMessage());
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.METHOD_NOT_SUPPORTED));
     }
 
@@ -90,7 +90,7 @@ public class ExceptionTranslator {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ErrorDTO processValidationError(MethodArgumentNotValidException ex) {
-        LOG.error("Exception caught", ex);
+        LOG.error("Validation exception: {}", ex.getMessage());
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
         return processFieldErrors(fieldErrors);

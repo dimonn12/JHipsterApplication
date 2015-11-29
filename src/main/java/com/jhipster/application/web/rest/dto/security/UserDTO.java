@@ -24,17 +24,19 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
     @Size(min = 1, max = 50)
     private String login;
 
-    @NotNull
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 
-    @Size(max = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String firstName;
 
-    @Size(max = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String lastName;
 
     @Email
+    @NotNull
     @Size(min = 5, max = 100)
     private String email;
 
@@ -181,11 +183,14 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
         return authorities;
     }
 
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
                "login='" + login + '\'' +
-               ", password='" + password + '\'' +
                ", firstName='" + firstName + '\'' +
                ", lastName='" + lastName + '\'' +
                ", email='" + email + '\'' +

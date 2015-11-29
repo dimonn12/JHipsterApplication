@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -59,7 +58,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public Object registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
+    public Object registerAccount(@RequestBody @Valid UserDTO userDTO, HttpServletRequest request) {
         getLogger().debug("REST request to register new Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
@@ -139,7 +138,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public Object saveAccount(@RequestBody UserDTO userDTO) {
+    public Object saveAccount(@RequestBody @Valid UserDTO userDTO) {
         getLogger().debug("REST request to save Account: {}", userDTO);
         User user = userService.findOneByLogin(userDTO.getLogin());
         if(null != user) {
@@ -251,7 +250,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
-    public Object finishPasswordReset(@RequestBody KeyAndPasswordDTO keyAndPassword) {
+    public Object finishPasswordReset(@RequestBody @Valid KeyAndPasswordDTO keyAndPassword) {
         getLogger().debug("REST request to finish password reset: login={}", SecurityUtils.getCurrentLogin());
         if(!checkPasswordLength(keyAndPassword.getNewPassword())) {
             addError(ErrorStatusCode.INCORRECT_PASSWORD);

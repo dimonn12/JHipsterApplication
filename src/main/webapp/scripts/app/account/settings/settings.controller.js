@@ -20,9 +20,17 @@ angular.module('jHipsterApplicationApp')
                         $translate.use($scope.settingsAccount.langKey);
                     }
                 });
-            }).catch(function () {
+            }).catch(function (errorObject) {
                 $scope.success = null;
                 $scope.error = 'ERROR';
+
+                for (var indx = 0; indx < errorObject.data.errorStatuses.length; indx++) {
+                    var errorStatus = errorObject.data.errorStatuses[indx];
+                    if (errorStatus.code === 4000001) {
+                        $scope.error = null;
+                        $scope.errorEmailExists = true;
+                    }
+                }
             });
         };
     });

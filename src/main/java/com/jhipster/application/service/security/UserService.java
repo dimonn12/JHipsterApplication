@@ -162,16 +162,21 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     public User updateUserInformation(String firstName, String lastName, String email, String langKey) {
         User user = findOneByLogin(SecurityUtils.getCurrentLogin());
         if(null != user) {
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setLangKey(langKey);
-            user = saveUser(user);
-            if(null != user) {
-                logger.debug("Changed Information for User: {}", user);
-                return user;
+            User existingWithSameEmail = findOneByEmail(email);
+            if(null != existingWithSameEmail && !Objects.equals(existingWithSameEmail.getId(), user.getId())) {
+                addError(ErrorStatusCode.EMAIL_ALREADY_IN_USE);
             } else {
-                addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
+                user.setFirstName(firstName);
+                user.setLastName(lastName);
+                user.setEmail(email);
+                user.setLangKey(langKey);
+                user = saveUser(user);
+                if(null != user) {
+                    logger.debug("Changed Information for User: {}", user);
+                    return user;
+                } else {
+                    addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
+                }
             }
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
@@ -257,8 +262,8 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     }
 
     @Transactional(readOnly = true)
-    public User findOneByEmail(String login) {
-        return getRepository().findOneByEmail(login);
+    public User findOneByEmail(String email) {
+        return getRepository().findOneByEmail(email);
     }
 
     @Transactional(readOnly = true)
@@ -339,6 +344,7 @@ public class UserService extends EntityService<UserRepository, User, Long> {
 
     private User saveUser(User user) {
         try {
+            user.getAuthorities().size();
             getRepository().save(user);
             userSearchRepository.save(user);
             return user;

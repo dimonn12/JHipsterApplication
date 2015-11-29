@@ -67,6 +67,7 @@ public class ErrorProcessorImpl implements ErrorProcessor {
     @Override
     public ResponseEntity<?> processError() {
         Collection<Status> statuses = getCurrentContext().getAllStatuses();
+        getCurrentContext().clearStatuses();
         return new ResponseEntity<>(getErrorDTO(statuses), getErrorHttpStatus(statuses));
     }
 
