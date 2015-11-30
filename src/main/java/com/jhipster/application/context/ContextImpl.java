@@ -3,10 +3,8 @@ package com.jhipster.application.context;
 import com.jhipster.application.context.status.Status;
 import com.jhipster.application.context.status.StatusType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,7 +28,7 @@ public class ContextImpl implements Context {
 
     @Override
     public Collection<Status> getAllStatuses() {
-        return statusList;
+        return new HashSet<>(statusList);
     }
 
     @Override
