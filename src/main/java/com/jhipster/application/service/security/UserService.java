@@ -8,6 +8,7 @@ import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.security.SecurityUtils;
 import com.jhipster.application.service.EntityService;
 import com.jhipster.application.service.util.RandomUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
@@ -208,7 +209,12 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     @Transactional
     public User addNewUser(User newUser) {
         if(validateUserToSave(newUser)) {
-            return save(newUser);
+            if(StringUtils.isBlank(newUser.getPassword())) {
+                addError(ErrorStatusCode.PASSWORD_SHOULD_NOT_BE_EMPTY);
+            } else {
+                newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+                return saveUser(newUser);
+            }
         }
         return null;
     }
@@ -344,7 +350,9 @@ public class UserService extends EntityService<UserRepository, User, Long> {
 
     private User saveUser(User user) {
         try {
-            user.getAuthorities().size();
+            if(null != user.getAuthorities()) {
+                user.getAuthorities().size();
+            }
             getRepository().save(user);
             userSearchRepository.save(user);
             return user;

@@ -28,6 +28,7 @@ public enum ErrorStatusCode {
     DATE_EMPTY(4000104, "Date can't be empty"),
     NAME_EMPTY(4000105, "Name can't be empty"),
     EXTERNAL_ID_EMPTY(4000106, "External Id can't be empty"),
+    PASSWORD_SHOULD_NOT_BE_EMPTY(4000011, "Password should not be empty"),
     FORBIDDEN(4030000, "Access Denied. Forbidden"),
     ENTITY_NOT_FOUND(4040000, "Requested entity not found"),
     USER_NOT_FOUND_BY_LOGIN(4040001, "User not found by login"),
@@ -43,6 +44,7 @@ public enum ErrorStatusCode {
     CONCURRENCY_CONFLICT(4090000, "Concurrency conflict"),
     ENTITY_EXISTS(4090001, "Such entity already exists"),
     ENTITY_EXISTS_WITH_NAME(4090002, "Entity with such name already exists"),
+    UNSUPPORTED_MEDIA_TYPE(4150000, "Unsupported Media Type"),
     INTERNAL_SERVER_ERROR(5000000, "Internal server error");
 
     private final String message;

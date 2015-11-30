@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,12 +20,11 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
     public static final int PASSWORD_MIN_LENGTH = 5;
     public static final int PASSWORD_MAX_LENGTH = 100;
 
-    @Pattern(regexp = "^[a-z0-9]*$")
+    @Pattern(regexp = "^[a-z0-9_]*$")
     @NotNull
     @Size(min = 1, max = 50)
     private String login;
 
-    @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 
     @NotNull
@@ -70,7 +70,9 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
             user.getActivationKey(),
             user.getResetKey(),
             user.isLocked(),
-            user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()));
+            (null != user.getAuthorities() ?
+                user.getAuthorities().stream().map(Authority:: getName).collect(Collectors.toSet()) :
+                new HashSet<String>()));
     }
 
     public UserDTO(Long id,

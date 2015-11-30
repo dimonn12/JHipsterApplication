@@ -25,6 +25,7 @@ import java.io.Serializable;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 /**
@@ -58,6 +59,10 @@ public abstract class AbstractControllerTest<C extends AbstractController<E, D, 
             .build();
     }
 
+    protected ResultActions sendGet(String url, String id) throws Exception {
+        return sendGet(url.concat("/").concat(id));
+    }
+
     protected ResultActions sendGet(String url) throws Exception {
         return restUserMockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON))
             .andExpect(content().contentType("application/json"));
@@ -66,6 +71,11 @@ public abstract class AbstractControllerTest<C extends AbstractController<E, D, 
     protected ResultActions sendPost(String url, D dto) throws Exception {
         return restUserMockMvc.perform(post(url).content(objectMapper.writeValueAsString(dto))
             .accept(MediaType.APPLICATION_JSON)).andExpect(content().contentType("application/json"));
+    }
+
+    protected ResultActions sendPut(String url, String id) throws Exception {
+        return restUserMockMvc.perform(put(url.concat("/").concat(id)).accept(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType("application/json"));
     }
 
     protected ResultActions sendDelete(String url, String id) throws Exception {

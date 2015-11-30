@@ -6,6 +6,7 @@ import com.jhipster.application.web.rest.AbstractControllerTest;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.hamcrest.core.StringContains;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
@@ -23,16 +24,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class UserResourceTest extends AbstractControllerTest<UserResource, User, UserDTO, Long> {
 
+    private static final String URL = "/api/users";
+
     @Test
     public void testGetExistingUser() throws Exception {
-        ResultActions ra = sendGet("/api/users/admin");
+        ResultActions ra = sendGet(URL, "admin");
         ra.andExpect(status().isOk()).andExpect(jsonPath("$.lastName").value("Administrator"));
         afterTestOccurred();
     }
 
     @Test
     public void testGetUnknownUser() throws Exception {
-        ResultActions ra = sendGet("/api/users/unknown");
+        ResultActions ra = sendGet(URL, "unknown");
         ra.andExpect(status().isNotFound())
             .andExpect(jsonPath("$.errorStatuses[0].code").value(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN.getCode()));
         afterTestOccurred();
@@ -40,7 +43,7 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
 
     @Test
     public void testGetAllUsers() throws Exception {
-        ResultActions ra = sendGet("/api/users");
+        ResultActions ra = sendGet(URL);
         ra.andExpect(status().isOk());
         afterTestOccurred();
     }
@@ -59,13 +62,18 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
             "reset_key",
             false,
             new HashSet<>());
-        ResultActions ra = sendPost("/api/users", newUser);
-        ra.andExpect(status().isOk());
+        ResultActions ra = sendPost(URL, newUser);
+        String header = ra.andExpect(status().isCreated())
+            .andReturn()
+            .getResponse()
+            .getHeader("X-jHipsterApplicationApp-alert");
 
-        ra = sendGet("/api/users/admin");
-        ra.andExpect(status().isOk()).andExpect(jsonPath("$.lastName").value("Administrator"));
-        afterTestOccurred();
-        afterTestOccurred();
+        ra = sendGet(URL, "system_unit_test");
+        ra.andExpect(status().isOk());
+        JSONObject json = new JSONObject(ra.andReturn().getResponse().getContentAsString());
+        Assert.assertEquals(json.get("lastName").toString(), newUser.getLastName());
+        Assert.assertNotNull(json.get("id"));
+
     }
 
     @Test

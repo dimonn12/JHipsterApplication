@@ -14,8 +14,6 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.Pointcut;
-import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ReflectionUtils.MethodCallback;
@@ -69,22 +67,25 @@ public class RestResponseMethodInterceptor implements MethodInterceptor, MethodC
         try {
             return processInvocationResult(invocation.proceed(), annotationReturnType, invocation.getArguments());
         } catch(Exception e) {
-            if (LOG.isWarnEnabled()) {
-                LOG.warn("Invocation ".concat(methodKey.toString()).concat(" caught exception: ").concat(e.getMessage()), e);
+            if(LOG.isWarnEnabled()) {
+                LOG.warn("Invocation ".concat(methodKey.toString())
+                    .concat(" caught exception: ")
+                    .concat(StringUtils.defaultIfBlank(e.getMessage(), e.getClass().toString())), e);
             }
             requestProcessor.addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
             return requestProcessor.processError();
         }
     }
 
-    private ResponseEntity<?> processInvocationResult(Object result,  RestResponse.ResponseReturnType annotationReturnType, Object[] args) {
+    private ResponseEntity<?> processInvocationResult(Object result,
+                                                      RestResponse.ResponseReturnType annotationReturnType,
+                                                      Object[] args) {
         switch(annotationReturnType) {
             case STRING:
                 return requestProcessor.processRequest((String)result);
             case HTTP_HEADERS_CONTAINER:
                 HttpHeadersContainer headersContainer = (HttpHeadersContainer)result;
-                return requestProcessor.processRequest(headersContainer.getHeaders(),
-                    headersContainer.getBody());
+                return requestProcessor.processRequest(headersContainer.getHeaders(), headersContainer.getBody());
             case URI_CONTAINER:
                 URIBodyContainer uriBodyContainer = (URIBodyContainer)result;
                 return requestProcessor.processRequestCreated(uriBodyContainer.getHeaders(),
@@ -101,7 +102,9 @@ public class RestResponseMethodInterceptor implements MethodInterceptor, MethodC
                         dto = (BaseEntityDTO<?, ?>)args[i];
                     }
                 }
-                return requestProcessor.processRequest(StringUtils.lowerCase(result.getClass().getName()), (BaseEntity<?, ?>)result, dto);
+                return requestProcessor.processRequest(StringUtils.lowerCase(result.getClass().getName()),
+                    (BaseEntity<?, ?>)result,
+                    dto);
             case BASE_DTO:
                 return requestProcessor.processRequest((BaseDTO)result);
             case DEFAULT:

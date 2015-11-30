@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -84,6 +85,14 @@ public class ExceptionTranslator {
     public ErrorDTO processMethodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
         LOG.error("HttpRequest Method Not Supported: {}", exception.getMessage());
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.METHOD_NOT_SUPPORTED));
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public ErrorDTO processMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        LOG.error("Http Media Type Not Supported: {}", ex.getMessage());
+        return new ErrorDTO(new ErrorStatus(ErrorStatusCode.UNSUPPORTED_MEDIA_TYPE));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
