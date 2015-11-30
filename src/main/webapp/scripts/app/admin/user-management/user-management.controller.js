@@ -4,6 +4,11 @@ angular.module('jHipsterApplicationApp')
     .controller('UserManagementController', function ($scope, User, ParseLinks, Language) {
         $scope.users = [];
         $scope.authorities = ["ROLE_USER", "ROLE_ADMIN"];
+
+        $scope.success = null;
+        $scope.error = null;
+        $scope.validationError = null;
+
         Language.getAll().then(function (languages) {
             $scope.languages = languages;
         });
@@ -33,6 +38,7 @@ angular.module('jHipsterApplicationApp')
         $scope.showUpdate = function (login) {
             User.get({login: login}, function (result) {
                 $scope.user = result;
+                $scope.success = null;
                 $('#saveUserModal').modal('show');
             });
         };
@@ -40,7 +46,21 @@ angular.module('jHipsterApplicationApp')
         $scope.save = function () {
             User.update($scope.user,
                 function () {
+                    $scope.success = true;
+                    $scope.error = null;
+                    $scope.validationError = null;
                     $scope.refresh();
+                }, function (errorObject) {
+                    $scope.success = null;
+                    $scope.error = true;
+
+                    for (var indx = 0; indx < errorObject.data.errorStatuses.length; indx++) {
+                        var errorStatus = errorObject.data.errorStatuses[indx];
+                        if (errorStatus.code === 4000100) {
+                            $scope.error = null;
+                            $scope.validationError = true;
+                        }
+                    }
                 });
         };
 

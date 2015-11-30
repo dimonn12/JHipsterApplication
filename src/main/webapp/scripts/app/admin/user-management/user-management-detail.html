@@ -21,6 +21,7 @@
                         <input type="text" class="input-sm form-control" value="{{user.login}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.firstName">FirstName</span>
@@ -29,6 +30,7 @@
                         <input type="text" class="input-sm form-control" value="{{user.firstName}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.lastName">LastName</span>
@@ -37,6 +39,7 @@
                         <input type="text" class="input-sm form-control" value="{{user.lastName}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.email">Email</span>
@@ -45,6 +48,7 @@
                         <input type="text" class="input-sm form-control" value="{{user.email}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.activated">Activated</span>
@@ -65,12 +69,22 @@
 
                 <tr>
                     <td>
+                        <span translate="user-management.locked">Locked</span>
+                    </td>
+                    <td>
+                        <input type="text" class="input-sm form-control" value="{{user.locked}}" readonly>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
                         <span translate="user-management.createdBy">CreatedBy</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control" value="{{user.createdBy}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.createdDate">CreatedDate</span>
@@ -80,6 +94,7 @@
                                value="{{user.createdDate | date:'dd/MM/yy HH:mm' }}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
                         <span translate="user-management.lastModifiedBy">LastModifiedBy</span>
@@ -88,18 +103,20 @@
                         <input type="text" class="input-sm form-control" value="{{user.lastModifiedBy}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
-                        <span translate="user-management.lastModifiedDate">LastCreatedDate</span>
+                        <span translate="user-management.lastModifiedDate">LastModifiedDate</span>
                     </td>
                     <td>
                         <input type="text" class="input-sm form-control"
                                value="{{user.lastModifiedDate | date:'dd/MM/yy HH:mm'}}" readonly>
                     </td>
                 </tr>
+
                 <tr>
                     <td>
-                        <span translate="user-management.profiles">Profiles</span>
+                        <span translate="user-management.authorities">Authorities</span>
                     </td>
                     <td>
                         <ul class="list-unstyled">

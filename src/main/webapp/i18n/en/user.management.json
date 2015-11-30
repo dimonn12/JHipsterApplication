@@ -11,13 +11,24 @@
         "detail": {
             "title": "User"
         },
+        "messages" :{
+            "error": {
+                "fail": "<strong>An error has occurred!</strong> User could not be saved.",
+                "validation": "<strong>User is not valid!</strong> Could not be saved."
+            },
+            "success": "<strong>User saved!</strong>"
+        },
         "login": "Login",
         "firstName": "First name",
         "lastName": "Last name",
         "email": "Email",
+        "isactivated": "Is Activated",
+        "islocked": "Is Locked",
         "activated": "Activated",
         "deactivated": "Deactivated",
-        "profiles": "Profiles",
+        "locked": "Locked",
+        "unlocked": "Unlocked",
+        "authorities": "Authorities",
         "langKey": "Language",
         "createdBy": "Created by",
         "createdDate": "Created date",
