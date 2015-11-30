@@ -10,7 +10,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import java.util.HashSet;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,8 +26,7 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
     @Test
     public void testGetExistingUser() throws Exception {
         ResultActions ra = sendGet("/api/users/admin");
-        ra.andExpect(status().isOk())
-            .andExpect(jsonPath("$.lastName").value("Administrator"));
+        ra.andExpect(status().isOk()).andExpect(jsonPath("$.lastName").value("Administrator"));
         afterTestOccurred();
     }
 
@@ -42,6 +42,29 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
     public void testGetAllUsers() throws Exception {
         ResultActions ra = sendGet("/api/users");
         ra.andExpect(status().isOk());
+        afterTestOccurred();
+    }
+
+    @Test
+    public void testCreateNewUser() throws Exception {
+        UserDTO newUser = new UserDTO(null,
+            "system_unit_test",
+            "password",
+            "first_name",
+            "last_name",
+            "email@email.ru",
+            true,
+            "en",
+            "activation_key",
+            "reset_key",
+            false,
+            new HashSet<>());
+        ResultActions ra = sendPost("/api/users", newUser);
+        ra.andExpect(status().isOk());
+
+        ra = sendGet("/api/users/admin");
+        ra.andExpect(status().isOk()).andExpect(jsonPath("$.lastName").value("Administrator"));
+        afterTestOccurred();
         afterTestOccurred();
     }
 

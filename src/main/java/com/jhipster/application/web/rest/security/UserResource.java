@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.URI_CONTAINER)
-    public Object createUser(@RequestBody UserDTO userDTO) throws URISyntaxException {
+    public Object createUser(@RequestBody @Valid UserDTO userDTO) throws URISyntaxException {
         getLogger().debug("REST request to save User: {}", userDTO);
         if(null != userDTO.getId()) {
             addError(ErrorStatusCode.ENTITY_ALREADY_HAS_AN_ID);
@@ -105,7 +106,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
-    public Object updateUser(@RequestBody ManagedUserDTO managedUserDTO) throws URISyntaxException {
+    public Object updateUser(@RequestBody @Valid ManagedUserDTO managedUserDTO) throws URISyntaxException {
         getLogger().debug("REST request to update User: {}", managedUserDTO);
         User result = userService.save(getEntity(managedUserDTO));
         if(null != result) {
