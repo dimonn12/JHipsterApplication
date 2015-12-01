@@ -220,27 +220,29 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     }
 
     @Transactional
-    public void lockUser(User user) {
+    public User lockUser(User user) {
         logger.debug("Attempt from {} to lock User: {}", SecurityUtils.getCurrentLogin(), user);
         User existingUser = findById(user.getId());
         if(null != existingUser) {
             existingUser.setLocked(true);
-            saveUser(user);
+            return saveUser(user);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_ID);
         }
+        return null;
     }
 
     @Transactional
-    public void unlockUser(User user) {
+    public User unlockUser(User user) {
         logger.debug("Attempt from {} to unlock User: {}", SecurityUtils.getCurrentLogin(), user);
         User existingUser = findById(user.getId());
         if(null != existingUser) {
             existingUser.setLocked(false);
-            saveUser(user);
+            return saveUser(user);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_ID);
         }
+        return null;
     }
 
     @Transactional

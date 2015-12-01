@@ -242,10 +242,10 @@
                     </td>
                     <td>{{user.langKey}}</td>
                     <td>
-                        <span class="label label-danger" ng-click="setActive(user, true)" ng-show="user.locked"
+                        <span class="label label-danger" ng-click="unlockUser(user)" ng-show="user.locked"
                               translate="user-management.locked" style="cursor: pointer;">Locked
                         </span>
-                        <span class="label label-success" ng-click="setActive(user, false)" ng-show="!user.locked"
+                        <span class="label label-success" ng-click="lockUser(user)" ng-show="!user.locked"
                               translate="user-management.unlocked" style="cursor: pointer;">Unlocked
                         </span>
                     </td>

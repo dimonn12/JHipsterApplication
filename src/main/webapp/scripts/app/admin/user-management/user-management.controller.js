@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('jHipsterApplicationApp')
-    .controller('UserManagementController', function ($scope, User, ParseLinks, Language) {
+    .controller('UserManagementController', function ($scope, User, UserLock, UserUnlock, ParseLinks, Language) {
         $scope.users = [];
         $scope.authorities = ["ROLE_USER", "ROLE_ADMIN"];
 
@@ -62,6 +62,20 @@ angular.module('jHipsterApplicationApp')
                         }
                     }
                 });
+        };
+
+        $scope.lockUser = function (user) {
+            UserLock.get({login: user.login}, function (result) {
+                $scope.loadAll();
+                $scope.clear();
+            });
+        };
+
+        $scope.unlockUser = function (user) {
+            UserUnlock.get({login: user.login}, function (result) {
+                $scope.loadAll();
+                $scope.clear();
+            });
         };
 
         $scope.refresh = function () {

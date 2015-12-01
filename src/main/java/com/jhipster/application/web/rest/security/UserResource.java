@@ -123,6 +123,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.HTTP_HEADERS_CONTAINER)
     public Object getAllUsers(Pageable pageable) throws URISyntaxException {
         getLogger().debug("REST request to get all Users: {}", pageable);
@@ -142,11 +143,48 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
     public Object getUser(@PathVariable String login) {
+        getLogger().debug("REST request to unlock User: login={}", login);
+        User user = userService.getUserWithAuthoritiesByLogin(login);
+        if(null != user) {
+            return new ManagedUserDTO(user);
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/{login}/lock",
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @Secured(AuthoritiesConstants.ADMIN)
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public Object lockUser(@PathVariable String login) {
+        getLogger().debug("REST request to lock User: login={}", login);
+        User user = userService.getUserWithAuthoritiesByLogin(login);
+        if(null != user) {
+            user = userService.lockUser(user);
+            return new ManagedUserDTO(user);
+        } else {
+            addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/{login}/unlock",
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @Secured(AuthoritiesConstants.ADMIN)
+    @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
+    public Object unlockUser(@PathVariable String login) {
         getLogger().debug("REST request to get User: login={}", login);
         User user = userService.getUserWithAuthoritiesByLogin(login);
         if(null != user) {
+            user = userService.unlockUser(user);
             return new ManagedUserDTO(user);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
@@ -162,6 +200,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.LIST)
     public Object search(@PathVariable String query) {
         getLogger().debug("REST request to search by query={}", query);

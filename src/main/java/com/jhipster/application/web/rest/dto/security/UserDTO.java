@@ -71,7 +71,7 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
             user.getResetKey(),
             user.isLocked(),
             (null != user.getAuthorities() ?
-                user.getAuthorities().stream().map(Authority:: getName).collect(Collectors.toSet()) :
+                user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet()) :
                 new HashSet<String>()));
     }
 
@@ -198,6 +198,7 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
                ", email='" + email + '\'' +
                ", activated=" + activated +
                ", langKey='" + langKey + '\'' +
+               ", isLocked=" + isLocked +
                ", authorities=" + authorities +
                '}';
     }
