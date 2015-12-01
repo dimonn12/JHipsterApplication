@@ -225,7 +225,7 @@ public class UserService extends EntityService<UserRepository, User, Long> {
         User existingUser = findById(user.getId());
         if(null != existingUser) {
             existingUser.setLocked(true);
-            return saveUser(user);
+            return saveUser(existingUser);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_ID);
         }
@@ -238,7 +238,7 @@ public class UserService extends EntityService<UserRepository, User, Long> {
         User existingUser = findById(user.getId());
         if(null != existingUser) {
             existingUser.setLocked(false);
-            return saveUser(user);
+            return saveUser(existingUser);
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_ID);
         }

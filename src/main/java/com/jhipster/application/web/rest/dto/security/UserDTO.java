@@ -20,7 +20,7 @@ public class UserDTO extends BaseEntityDTO<User, Long> {
     public static final int PASSWORD_MIN_LENGTH = 5;
     public static final int PASSWORD_MAX_LENGTH = 100;
 
-    @Pattern(regexp = "^[a-z0-9_]*$")
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$")
     @NotNull
     @Size(min = 1, max = 50)
     private String login;

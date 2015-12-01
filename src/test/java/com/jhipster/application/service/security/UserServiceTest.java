@@ -1,14 +1,16 @@
 package com.jhipster.application.service.security;
 
 import com.jhipster.application.Application;
+import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
-import com.jhipster.application.repository.security.PersistentTokenRepository;
-import com.jhipster.application.repository.security.UserRepository;
-import com.jhipster.application.service.security.UserService;
+import com.jhipster.application.repository.security.AuthorityRepository;
+import com.jhipster.application.security.AuthoritiesConstants;
 import com.jhipster.application.service.util.RandomUtil;
+import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -18,8 +20,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,17 +40,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 public class UserServiceTest {
 
-    /*@Inject
-    private PersistentTokenRepository persistentTokenRepository;
-
-    @Inject
-    private UserRepository userRepository;
-
     @Inject
     private UserService userService;
 
+    @Inject
+    private AuthorityRepository authorityRepository;
+
+    private String testLogin = "system_unit_test";
+    private String testEmail = "system_unit_test@email.com";
+
+    private UserDTO newUser;
+
+    @Before
+    public void configure() {
+        newUser = new UserDTO();
+        newUser.setPassword("password1!");
+        newUser.setActivated(true);
+        newUser.setEmail(testEmail);
+        newUser.setLogin(testLogin);
+        newUser.setActivationKey("123456");
+        newUser.setFirstName("firstName");
+        newUser.setLastName("lastName");
+        newUser.setIsLocked(false);
+        newUser.setLangKey("en");
+        newUser.setResetKey("reset");
+
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authorityRepository.findOne(AuthoritiesConstants.USER));
+        newUser.setAuthorities(authorities.stream().map(Authority:: getName).collect(Collectors.toSet()));
+    }
+
     @Test
     public void testRemoveOldPersistentTokens() {
+        userService.removeOldPersistentTokens();
         User admin = userRepository.findOneByLogin("admin");
         int existingCount = persistentTokenRepository.findByUser(admin).size();
         generateUserToken(admin, "1111-1111", new LocalDate());
@@ -183,5 +210,5 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
-    }*/
+    }
 }

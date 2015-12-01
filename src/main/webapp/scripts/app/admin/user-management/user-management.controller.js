@@ -32,7 +32,10 @@ angular.module('jHipsterApplicationApp')
             User.update(user, function () {
                 $scope.loadAll();
                 $scope.clear();
-            });
+            }, function (errorObject) {
+                                 $scope.success = null;
+                                 $scope.error = true;
+                             });
         };
 
         $scope.showUpdate = function (login) {
