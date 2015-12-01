@@ -70,7 +70,7 @@ public class UserServiceTest {
         newUser.setAuthorities(authorities.stream().map(Authority:: getName).collect(Collectors.toSet()));
     }
 
-    @Test
+    /*@Test
     public void testRemoveOldPersistentTokens() {
         userService.removeOldPersistentTokens();
         User admin = userRepository.findOneByLogin("admin");
@@ -210,5 +210,5 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
-    }
+    }*/
 }

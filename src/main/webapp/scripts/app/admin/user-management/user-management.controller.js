@@ -1,13 +1,35 @@
 'use strict';
 
 angular.module('jHipsterApplicationApp')
-    .controller('UserManagementController', function ($scope, User, UserLock, UserUnlock, ParseLinks, Language) {
+    .controller('UserManagementController', function ($scope, $translate, User, UserLock, UserUnlock, ParseLinks, Language) {
         $scope.users = [];
         $scope.authorities = ["ROLE_USER", "ROLE_ADMIN"];
 
-        $scope.success = null;
-        $scope.error = null;
-        $scope.validationError = null;
+        $scope.responseResults = {
+            success: false,
+            error: false,
+            validationError: false,
+
+            activationSuccess: false,
+            activationError: false,
+
+            userLockSuccess: false,
+            userLockError: false,
+
+            clearAll: function () {
+                $scope.responseResults.success = false;
+                $scope.responseResults.error = false;
+                $scope.responseResults.validationError = false;
+
+                $scope.responseResults.activationSuccess = false;
+                $scope.responseResults.activationError = false;
+
+                $scope.responseResults.userLockSuccess = false;
+                $scope.responseResults.userLockError = false;
+            }
+        };
+
+        $scope.responseResults.clearAll();
 
         Language.getAll().then(function (languages) {
             $scope.languages = languages;
@@ -28,46 +50,64 @@ angular.module('jHipsterApplicationApp')
         $scope.loadAll();
 
         $scope.setActive = function (user, isActivated) {
+            $scope.responseResults.clearAll();
             user.activated = isActivated;
             User.update(user, function () {
+                $scope.responseResults.activationSuccess = true;
+
+
                 $scope.loadAll();
                 $scope.clear();
             }, function (errorObject) {
-                                 $scope.success = null;
-                                 $scope.error = true;
-                             });
+                $scope.responseResults.activationError = true;
+
+                for (var indx = 0; indx < errorObject.data.errorStatuses.length; indx++) {
+                    var errorStatus = errorObject.data.errorStatuses[indx];
+                    /*if (errorStatus.code === 4000100) {
+                     $scope.responseResults.clearAll();
+                     $scope.responseResults.validationError = true;
+                     }*/
+                }
+            });
         };
 
         $scope.showUpdate = function (login) {
+            $scope.responseResults.clearAll();
             User.get({login: login}, function (result) {
                 $scope.user = result;
-                $scope.success = null;
                 $('#saveUserModal').modal('show');
             });
         };
 
         $scope.save = function () {
+            $scope.responseResults.clearAll();
             User.update($scope.user,
                 function () {
-                    $scope.success = true;
-                    $scope.error = null;
-                    $scope.validationError = null;
+                    $scope.responseResults.success = true;
+
+                    $translate('user-management.messages.success', {login: $scope.user.login})
+                        .
+                        then(function (title) {
+                            $translate.refresh($scope.user.langKey);
+                        })
+                    ;
+
                     $scope.refresh();
                 }, function (errorObject) {
-                    $scope.success = null;
-                    $scope.error = true;
+                    $scope.responseResults.error = true;
 
                     for (var indx = 0; indx < errorObject.data.errorStatuses.length; indx++) {
                         var errorStatus = errorObject.data.errorStatuses[indx];
                         if (errorStatus.code === 4000100) {
-                            $scope.error = null;
-                            $scope.validationError = true;
+                            $scope.responseResults.clearAll();
+                            $scope.responseResults.validationError = true;
                         }
                     }
                 });
         };
 
         $scope.lockUser = function (user) {
+            $scope.responseResults.clearAll();
             UserLock.get({login: user.login}, function (result) {
                 $scope.loadAll();
                 $scope.clear();
@@ -75,6 +115,7 @@ angular.module('jHipsterApplicationApp')
         };
 
         $scope.unlockUser = function (user) {
+            $scope.responseResults.clearAll();
             UserUnlock.get({login: user.login}, function (result) {
                 $scope.loadAll();
                 $scope.clear();

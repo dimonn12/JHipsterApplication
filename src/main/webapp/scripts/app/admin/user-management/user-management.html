@@ -3,7 +3,7 @@
         <h2 class="col-sm-6" translate="user-management.home.title">Users</h2>
     </div>
 
-    <div class="alert alert-success" ng-show="success" translate="user-management.messages.success">
+    <div class="alert alert-success" ng-show="responseResults.success" translate="user-management.messages.success" translate-values="{login: '{{user.login}}'}">
         <strong>User saved!</strong>
     </div>
 
@@ -21,12 +21,14 @@
                     </div>
                     <div class="modal-body">
 
-                        <div class="alert alert-danger" ng-show="error" translate="user-management.messages.error.fail">
+                        <div class="alert alert-danger" ng-show="responseResults.error" translate="user-management.messages.error.fail"
+                             translate-values="{login: '{{user.login}}'}">
                             <strong>An error has occurred!</strong>
                             User could not be saved.
                         </div>
 
-                        <div class="alert alert-danger" ng-show="validationError" translate="user-management.messages.error.validation">
+                        <div class="alert alert-danger" ng-show="responseResults.validationError" translate="user-management.messages.error.validation"
+                             translate-values="{login: '{{user.login}}'}">
                             <strong>User is not valid!</strong>
                             Could not be saved.
                         </div>
