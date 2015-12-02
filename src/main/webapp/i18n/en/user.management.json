@@ -11,12 +11,22 @@
         "detail": {
             "title": "User"
         },
-        "messages" :{
+        "messages": {
             "error": {
                 "fail": "<strong>An error has occurred!</strong> User [{{login}}] could not be saved.",
-                "validation": "<strong>User [{{login}}] is not valid!</strong> Could not be saved."
+                "validation": "<strong>User [{{login}}] is not valid!</strong> Could not be saved.",
+                "activationError": "<strong>User [{{login}}] was not activated!</strong>",
+                "deactivationError": "<strong>User [{{login}}] was not deactivated!</strong>.",
+                "userLockError": "<strong>User [{{login}}] was not locked!</strong>",
+                "userUnlockError": "<strong>User [{{login}}] was not unlocked!</strong>"
             },
-            "success": "<strong>User [{{login}}] saved!</strong>"
+            "success": {
+                "saved": "<strong>User [{{login}}] was saved!</strong>",
+                "activationSuccess": "<strong>User [{{login}}] was activated!</strong>",
+                "deactivationSuccess": "<strong>User [{{login}}] was deactivated!</strong>",
+                "userLockSuccess": "<strong>User [{{login}}] was locked!</strong>",
+                "userUnlockSuccess": "<strong>User [{{login}}] was unlocked!</strong>"
+            }
         },
         "login": "Login",
         "firstName": "First name",

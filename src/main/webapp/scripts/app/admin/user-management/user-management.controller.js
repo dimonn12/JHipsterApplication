@@ -6,37 +6,38 @@ angular.module('jHipsterApplicationApp')
         $scope.authorities = ["ROLE_USER", "ROLE_ADMIN"];
 
         $scope.responseResults = {
+            serverError: false,
+
             success: false,
             error: false,
             validationError: false,
 
             activationSuccess: false,
+            deactivationSuccess: false,
             activationError: false,
+            deactivationError: false,
 
             userLockSuccess: false,
+            userUnlockSuccess: false,
             userLockError: false,
+            userUnlockError: false,
 
             clearAll: function () {
+                $scope.responseResults.serverError = false;
+
                 $scope.responseResults.success = false;
-                $scope.responseResults.successId = 'responseResults-success';
-
                 $scope.responseResults.error = false;
-                $scope.responseResults.errorId = '';
-
                 $scope.responseResults.validationError = false;
-                $scope.responseResults.validationErrorId = '';
 
                 $scope.responseResults.activationSuccess = false;
-                $scope.responseResults.activationSuccessId = '';
-
+                $scope.responseResults.deactivationSuccess = false;
                 $scope.responseResults.activationError = false;
-                $scope.responseResults.activationErrorId = '';
+                $scope.responseResults.deactivationError = false;
 
                 $scope.responseResults.userLockSuccess = false;
-                $scope.responseResults.userLockSuccessId = '';
-
+                $scope.responseResults.userUnlockSuccess = false;
                 $scope.responseResults.userLockError = false;
-                $scope.responseResults.userLockErrorId = '';
+                $scope.responseResults.userUnlockError = false;
             }
         };
 
@@ -51,6 +52,8 @@ angular.module('jHipsterApplicationApp')
             User.query({page: $scope.page, per_page: 20}, function (result, headers) {
                 $scope.links = ParseLinks.parse(headers('link'));
                 $scope.users = result;
+            }, function () {
+                $scope.responseResults.serverError = true;
             });
         };
 
@@ -58,35 +61,38 @@ angular.module('jHipsterApplicationApp')
             $scope.page = page;
             $scope.loadAll();
         };
+
         $scope.loadAll();
 
         $scope.setActive = function (user, isActivated) {
             $scope.responseResults.clearAll();
             user.activated = isActivated;
+            $scope.user = user;
             User.update(user, function () {
-                $scope.responseResults.activationSuccess = true;
-
-
+                if ($scope.user.activated) {
+                    $scope.responseResults.activationSuccess = true;
+                } else {
+                    $scope.responseResults.deactivationSuccess = true;
+                }
                 $scope.loadAll();
-                $scope.clear();
             }, function (errorObject) {
-                $scope.responseResults.activationError = true;
-
-                for (var indx = 0; indx < errorObject.data.errorStatuses.length; indx++) {
-                    var errorStatus = errorObject.data.errorStatuses[indx];
-                    /*if (errorStatus.code === 4000100) {
-                     $scope.responseResults.clearAll();
-                     $scope.responseResults.validationError = true;
-                     }*/
+                $scope.user.activated = !isActivated;
+                if ($scope.user.activated) {
+                    $scope.responseResults.activationError = true;
+                } else {
+                    $scope.responseResults.deactivationError = true;
                 }
             });
         };
 
         $scope.showUpdate = function (login) {
             $scope.responseResults.clearAll();
+            $scope.clear();
             User.get({login: login}, function (result) {
                 $scope.user = result;
                 $('#saveUserModal').modal('show');
+            }, function () {
+                $scope.responseResults.serverError = true;
             });
         };
 
@@ -95,13 +101,6 @@ angular.module('jHipsterApplicationApp')
             User.update($scope.user,
                 function () {
                     $scope.responseResults.success = true;
-
-                    $translate('user-management.messages.success', {login: $scope.user.login}).then(function (value) {
-                        var $successElem = $('#' + $scope.responseResults.successId);
-                        $successElem.val(value);
-                        $successElem.text(value);
-                    });
-
                     $scope.refresh();
                 }, function (errorObject) {
                     $scope.responseResults.error = true;
@@ -118,24 +117,29 @@ angular.module('jHipsterApplicationApp')
 
         $scope.lockUser = function (user) {
             $scope.responseResults.clearAll();
+            $scope.user = user;
             UserLock.get({login: user.login}, function (result) {
+                $scope.responseResults.userLockSuccess = true;
                 $scope.loadAll();
-                $scope.clear();
+            }, function (errorObject) {
+                $scope.responseResults.userLockError = true;
             });
         };
 
         $scope.unlockUser = function (user) {
             $scope.responseResults.clearAll();
+            $scope.user = user;
             UserUnlock.get({login: user.login}, function (result) {
+                $scope.responseResults.userUnlockSuccess = true;
                 $scope.loadAll();
-                $scope.clear();
+            }, function (errorObject) {
+                $scope.responseResults.userUnlockError = true;
             });
         };
 
         $scope.refresh = function () {
             $scope.loadAll();
             $('#saveUserModal').modal('hide');
-            $scope.clear();
         };
 
         $scope.clear = function () {
