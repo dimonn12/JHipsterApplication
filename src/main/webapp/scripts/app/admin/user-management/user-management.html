@@ -3,7 +3,8 @@
         <h2 class="col-sm-6" translate="user-management.home.title">Users</h2>
     </div>
 
-    <div class="alert alert-success" ng-show="responseResults.success" translate="user-management.messages.success" translate-values="{login: '{{user.login}}'}">
+    <div id='responseResults-success' class="alert alert-success" ng-show="responseResults.success" translate="user-management.messages.success"
+         translate-values="{login: '{{user.login}}'}">
         <strong>User saved!</strong>
     </div>
 

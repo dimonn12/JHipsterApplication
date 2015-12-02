@@ -18,14 +18,25 @@ angular.module('jHipsterApplicationApp')
 
             clearAll: function () {
                 $scope.responseResults.success = false;
+                $scope.responseResults.successId = 'responseResults-success';
+
                 $scope.responseResults.error = false;
+                $scope.responseResults.errorId = '';
+
                 $scope.responseResults.validationError = false;
+                $scope.responseResults.validationErrorId = '';
 
                 $scope.responseResults.activationSuccess = false;
+                $scope.responseResults.activationSuccessId = '';
+
                 $scope.responseResults.activationError = false;
+                $scope.responseResults.activationErrorId = '';
 
                 $scope.responseResults.userLockSuccess = false;
+                $scope.responseResults.userLockSuccessId = '';
+
                 $scope.responseResults.userLockError = false;
+                $scope.responseResults.userLockErrorId = '';
             }
         };
 
@@ -85,12 +96,11 @@ angular.module('jHipsterApplicationApp')
                 function () {
                     $scope.responseResults.success = true;
 
-                    $translate('user-management.messages.success', {login: $scope.user.login})
-                        .
-                        then(function (title) {
-                            $translate.refresh($scope.user.langKey);
-                        })
-                    ;
+                    $translate('user-management.messages.success', {login: $scope.user.login}).then(function (value) {
+                        var $successElem = $('#' + $scope.responseResults.successId);
+                        $successElem.val(value);
+                        $successElem.text(value);
+                    });
 
                     $scope.refresh();
                 }, function (errorObject) {
