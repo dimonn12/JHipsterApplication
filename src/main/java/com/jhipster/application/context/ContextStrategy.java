@@ -5,11 +5,11 @@ package com.jhipster.application.context;
  */
 public interface ContextStrategy {
 
-    public void clearContext();
+    void clearContext();
 
-    public Context getContext();
+    Context getContext();
 
-    public void setContext(Context context);
+    void setContext(Context context);
 
-    public Context createEmptyContext();
+    Context createEmptyContext();
 }

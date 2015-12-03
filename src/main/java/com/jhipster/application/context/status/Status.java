@@ -5,10 +5,10 @@ package com.jhipster.application.context.status;
  */
 public interface Status {
 
-    public StatusType getStatusType();
+    StatusType getStatusType();
 
-    public int getCode();
+    int getCode();
 
-    public String getMessage();
+    String getMessage();
 
 }

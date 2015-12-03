@@ -60,4 +60,10 @@ public class ContextImpl implements Context {
             lock.unlock();
         }
     }
+
+    @Override
+    public boolean containsError() {
+        return containsStatusByType(StatusType.ERROR);
+    }
+
 }

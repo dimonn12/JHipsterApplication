@@ -16,36 +16,36 @@ import java.util.List;
  */
 public interface RequestProcessor {
 
-    public void addError(ErrorStatusCode errorStatusCode);
+    void addError(ErrorStatusCode errorStatusCode);
 
-    public ResponseEntity<?> processError();
+    ResponseEntity<?> processError();
 
-    public ResponseEntity<?> processRequest();
+    ResponseEntity<?> processRequest();
 
-    public ResponseEntity<?> processRequest(String value);
+    ResponseEntity<?> processRequest(String value);
 
-    public ResponseEntity<?> processRequest(BaseEntity<?, ?> entity);
+    ResponseEntity<?> processRequest(BaseEntity<?, ?> entity);
 
-    public ResponseEntity<?> processRequest(BaseDTO dto);
+    ResponseEntity<?> processRequest(BaseDTO dto);
 
-    public ResponseEntity<?> processRequest(List<?> objects);
+    ResponseEntity<?> processRequest(List<?> objects);
 
-    public ResponseEntity<?> processRequest(String entityName, BaseEntity<?, ?> entity, BaseEntityDTO<?, ?> dto);
+    ResponseEntity<?> processRequest(String entityName, BaseEntity<?, ?> entity, BaseEntityDTO<?, ?> dto);
 
-    public ResponseEntity<?> processRequest(String creationAlertMessage,
+    ResponseEntity<?> processRequest(String creationAlertMessage,
                                             URI forward,
                                             BaseEntity<?, ?> entity,
                                             BaseEntityDTO<?, ?> dto);
 
-    public ResponseEntity<?> processSaveRequest(String creationAlertMessage,
+    ResponseEntity<?> processSaveRequest(String creationAlertMessage,
                                                 URI forward,
                                                 BaseEntity<?, ?> entity,
                                                 BaseEntityDTO<?, ?> dto);
 
-    public ResponseEntity<?> processRequest(MultiValueMap<String, String> headers, Object body);
+    ResponseEntity<?> processRequest(MultiValueMap<String, String> headers, Object body);
 
-    public ResponseEntity<?> processRequestCreated(HttpHeaders headers, URI forward, Object body);
+    ResponseEntity<?> processRequestCreated(HttpHeaders headers, URI forward, Object body);
 
-    public ResponseEntity<?> processForbidden();
+    ResponseEntity<?> processForbidden();
 
 }

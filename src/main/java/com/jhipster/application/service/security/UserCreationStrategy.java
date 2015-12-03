@@ -7,10 +7,10 @@ import com.jhipster.application.domain.security.User;
  */
 public interface UserCreationStrategy {
 
-    public User createNewUserWithDefaultAuthorities();
+    User createNewUserWithDefaultAuthorities();
 
-    public User createNewUserWithAdminAuthorities();
+    User createNewUserWithAdminAuthorities();
 
-    public User createNewUserWithUserAuthorities();
+    User createNewUserWithUserAuthorities();
 
 }
