@@ -45,6 +45,8 @@ angular.module('jHipsterApplicationApp')
 
         Language.getAll().then(function (languages) {
             $scope.languages = languages;
+        }).catch(function (errorObject) {
+            $scope.responseResults.serverError = true;
         });
 
         $scope.page = 0;
