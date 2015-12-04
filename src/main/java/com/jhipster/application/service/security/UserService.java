@@ -343,7 +343,12 @@ public class UserService extends EntityService<UserRepository, User, Long> {
     @Transactional
     public void removeNotActivatedUsers() {
         DateTime now = new DateTime();
-        List<User> users = getRepository().findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
+        removeNotActivatedUsers(now.minusDays(3));
+    }
+
+    @Transactional
+    public void removeNotActivatedUsers(DateTime date) {
+        List<User> users = getRepository().findAllByActivatedIsFalseAndCreatedDateBefore(date);
         for(User user : users) {
             logger.debug("Deleting not activated user {}", user.getLogin());
             delete(user);

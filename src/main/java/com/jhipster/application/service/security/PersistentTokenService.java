@@ -1,8 +1,5 @@
 package com.jhipster.application.service.security;
 
-import com.jhipster.application.context.Context;
-import com.jhipster.application.context.ContextHolder;
-import com.jhipster.application.context.status.ErrorStatus;
 import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
@@ -18,7 +15,7 @@ import java.util.List;
  * Created by dimonn12 on 13.10.2015.
  */
 @Service
-public class PersistentTokenService extends AbstractService{
+public class PersistentTokenService extends AbstractService {
 
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(PersistentTokenService.class);
 
