@@ -48,7 +48,8 @@
             },
             "error": {
                 "dontmatch": "The password and its confirmation do not match!",
-                "serverError": "Internal server error."
+                "serverError": "Internal server error.",
+                "tooweak": "The password is too weak!"
             },
             "validate": {
                 "newpassword": {
