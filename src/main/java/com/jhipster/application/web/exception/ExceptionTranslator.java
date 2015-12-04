@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
@@ -93,6 +94,14 @@ public class ExceptionTranslator {
     public ErrorDTO processMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
         LOG.error("Http Media Type Not Supported: {}", ex.getMessage());
         return new ErrorDTO(new ErrorStatus(ErrorStatusCode.UNSUPPORTED_MEDIA_TYPE));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO processHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        LOG.error("Http Message Not Readable Exception: {}", ex.getMessage());
+        return new ErrorDTO(new ErrorStatus(ErrorStatusCode.BAD_REQUEST));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
