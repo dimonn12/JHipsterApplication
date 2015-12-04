@@ -13,18 +13,22 @@
                 ]
             </h2>
 
-            <div class="alert alert-success" ng-show="success" translate="settings.messages.success">
+            <div class="alert alert-success" ng-show="responseResults.success" translate="settings.messages.success">
                 <strong>Settings saved!</strong>
             </div>
 
-            <div class="alert alert-danger" ng-show="errorEmailExists" translate="settings.messages.error.emailexists">
+            <div class="alert alert-danger" ng-show="responseResults.errorEmailExists" translate="settings.messages.error.emailexists">
                 <strong>E-mail is already in use!</strong>
                 Please choose another one.
             </div>
 
-            <div class="alert alert-danger" ng-show="error" translate="settings.messages.error.fail">
-                <strong>An error has occurred!</strong>
-                Settings could not be saved.
+            <div class="alert alert-danger" ng-show="responseResults.validationError" translate="settings.messages.error.validation">
+                <strong>Settings are not valid!</strong>
+                Could not be saved.
+            </div>
+
+            <div class="alert alert-danger" ng-show="responseResults.serverError" translate="global.messages.error.serverError">
+                <strong>Internal server error.</strong>
             </div>
 
             <form name="form" role="form" novalidate ng-submit="save()" show-validation>
@@ -75,7 +79,8 @@
 
                 <div class="form-group">
                     <label for="email" translate="global.form.email">E-mail</label>
-                    <input type="email" class="form-control" ng-class="{$scope.errorEmailExists : 'error'}" id="email" name="email" placeholder="{{'global.form.email.placeholder' | translate}}"
+                    <input type="email" class="form-control" ng-class="{$scope.errorEmailExists : 'error'}" id="email" name="email"
+                           placeholder="{{'global.form.email.placeholder' | translate}}"
                            ng-model="settingsAccount.email" ng-minlength=5 ng-maxlength=100 required maxlength="100">
                     <div ng-show="form.email.$dirty && form.email.$invalid">
                         <p class="help-block"
