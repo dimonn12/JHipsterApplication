@@ -10,12 +10,14 @@ import java.util.Collection;
  */
 public interface Context {
 
-    public void addStatus(Status statusToAdd);
+    void addStatus(Status statusToAdd);
 
-    public Collection<Status> getAllStatuses();
+    Collection<Status> getAllStatuses();
 
-    public int clearStatuses();
+    int clearStatuses();
 
-    public boolean containsStatusByType(StatusType statusType);
+    boolean containsStatusByType(StatusType statusType);
+
+    boolean containsError();
 
 }

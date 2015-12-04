@@ -3,6 +3,7 @@ package com.jhipster.application.config;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.jhipster.application.config.liquibase.AsyncSpringLiquibase;
+import com.jhipster.application.service.transaction.TransactionManager_Impl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import liquibase.integration.spring.SpringLiquibase;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +21,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
@@ -115,5 +120,10 @@ public class DatabaseConfiguration {
     @Bean
     public Hibernate4Module hibernate4Module() {
         return new Hibernate4Module();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new TransactionManager_Impl();
     }
 }

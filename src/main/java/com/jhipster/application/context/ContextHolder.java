@@ -5,12 +5,12 @@ package com.jhipster.application.context;
  */
 public interface ContextHolder {
 
-    public Context getCurrentContext();
+    Context getCurrentContext();
 
-    public void setContext(Context context);
+    void setContext(Context context);
 
-    public boolean removeContext(Context context);
+    boolean removeContext(Context context);
 
-    public void removeCurrentContext();
+    void removeCurrentContext();
 
 }

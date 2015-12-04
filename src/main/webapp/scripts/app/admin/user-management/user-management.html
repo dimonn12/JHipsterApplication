@@ -3,8 +3,53 @@
         <h2 class="col-sm-6" translate="user-management.home.title">Users</h2>
     </div>
 
-    <div class="alert alert-success" ng-show="success" translate="user-management.messages.success">
-        <strong>User saved!</strong>
+    <div class="alert alert-danger" ng-show="responseResults.serverError" translate="global.messages.error.serverError">
+        <strong>Internal server error.</strong>
+    </div>
+
+    <div class="alert alert-success" ng-show="responseResults.success" translate="user-management.messages.success.saved"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was saved!</strong>
+    </div>
+
+    <div class="alert alert-success" ng-show="responseResults.activationSuccess" translate="user-management.messages.success.activationSuccess"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was activated!</strong>
+    </div>
+
+    <div class="alert alert-success" ng-show="responseResults.deactivationSuccess" translate="user-management.messages.success.deactivationSuccess"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was deactivated!</strong>
+    </div>
+
+    <div class="alert alert-danger" ng-show="responseResults.activationError" translate="user-management.messages.error.activationError"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was not activated!</strong>
+    </div>
+
+    <div class="alert alert-danger" ng-show="responseResults.deactivationError" translate="user-management.messages.error.deactivationError"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was not deactivated!</strong>
+    </div>
+
+    <div class="alert alert-success" ng-show="responseResults.userLockSuccess" translate="user-management.messages.success.userLockSuccess"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was locked!</strong>
+    </div>
+
+    <div class="alert alert-success" ng-show="responseResults.userUnlockSuccess" translate="user-management.messages.success.userUnlockSuccess"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was unlocked!</strong>
+    </div>
+
+    <div class="alert alert-danger" ng-show="responseResults.userLockError" translate="user-management.messages.error.userLockError"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was not locked!</strong>
+    </div>
+
+    <div class="alert alert-danger" ng-show="responseResults.userUnlockError" translate="user-management.messages.error.userUnlockError"
+         translate-values="{login: '{{user.login}}'}">
+        <strong>User was not unlocked!</strong>
     </div>
 
     <div class="modal fade" id="saveUserModal" tabindex="-1" role="dialog" aria-labelledby="myUserLabel"
@@ -21,12 +66,14 @@
                     </div>
                     <div class="modal-body">
 
-                        <div class="alert alert-danger" ng-show="error" translate="user-management.messages.error.fail">
+                        <div class="alert alert-danger" ng-show="responseResults.error" translate="user-management.messages.error.fail"
+                             translate-values="{login: '{{user.login}}'}">
                             <strong>An error has occurred!</strong>
                             User could not be saved.
                         </div>
 
-                        <div class="alert alert-danger" ng-show="validationError" translate="user-management.messages.error.validation">
+                        <div class="alert alert-danger" ng-show="responseResults.validationError" translate="user-management.messages.error.validation"
+                             translate-values="{login: '{{user.login}}'}">
                             <strong>User is not valid!</strong>
                             Could not be saved.
                         </div>

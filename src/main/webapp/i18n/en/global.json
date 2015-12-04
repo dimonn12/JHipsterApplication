@@ -47,7 +47,8 @@
                 "register": "You don't have an account yet? <a class=\"alert-link\" href=\"#/register\">Register a new account</a>"
             },
             "error": {
-                "dontmatch": "The password and its confirmation do not match!"
+                "dontmatch": "The password and its confirmation do not match!",
+                "serverError": "Internal server error."
             },
             "validate": {
                 "newpassword": {

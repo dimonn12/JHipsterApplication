@@ -14,16 +14,16 @@ import java.util.Collection;
  */
 public interface ErrorProcessor {
 
-    public Context getCurrentContext();
+    Context getCurrentContext();
 
-    public HttpStatus getErrorHttpStatus(Collection<Status> statuses);
+    HttpStatus getErrorHttpStatus(Collection<Status> statuses);
 
-    public boolean hasErrors();
+    boolean hasErrors();
 
-    public void addError(ErrorStatusCode errorStatusCode);
+    void addError(ErrorStatusCode errorStatusCode);
 
-    public ErrorDTO getErrorDTO(Collection<Status> statuses);
+    ErrorDTO getErrorDTO(Collection<Status> statuses);
 
-    public ResponseEntity<?> processError();
+    ResponseEntity<?> processError();
 
 }

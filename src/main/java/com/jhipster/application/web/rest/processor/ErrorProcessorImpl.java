@@ -49,7 +49,7 @@ public class ErrorProcessorImpl implements ErrorProcessor {
 
     @Override
     public boolean hasErrors() {
-        return getCurrentContext().containsStatusByType(StatusType.ERROR);
+        return getCurrentContext().containsError();
     }
 
     @Override

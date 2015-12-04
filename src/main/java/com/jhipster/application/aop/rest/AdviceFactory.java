@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
  */
 public interface AdviceFactory {
 
-   public  Advice getRestResponseAdvice(Object bean, Class<?> targetClass);
+    Advice getRestResponseAdvice(Object bean, Class<?> targetClass);
 
 }
 
