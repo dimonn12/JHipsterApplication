@@ -5,9 +5,9 @@ import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.AuthorityRepository;
+import com.jhipster.application.repository.security.PersistentTokenRepository;
 import com.jhipster.application.security.AuthoritiesConstants;
 import com.jhipster.application.service.util.RandomUtil;
-import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -46,46 +46,37 @@ public class UserServiceTest {
     @Inject
     private AuthorityRepository authorityRepository;
 
+    @Inject
+    private PersistentTokenService persistentTokenService;
+
+    @Inject
+    private PersistentTokenRepository persistentTokenRepository;
+
     private String testLogin = "system_unit_test";
     private String testEmail = "system_unit_test@email.com";
 
-    private UserDTO newUser;
+    private User newUser;
 
     @Before
     public void configure() {
-        newUser = new UserDTO();
-        newUser.setPassword("password1!");
-        newUser.setActivated(true);
-        newUser.setEmail(testEmail);
-        newUser.setLogin(testLogin);
-        newUser.setActivationKey("123456");
-        newUser.setFirstName("firstName");
-        newUser.setLastName("lastName");
-        newUser.setIsLocked(false);
-        newUser.setLangKey("en");
-        newUser.setResetKey("reset");
-
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(authorityRepository.findOne(AuthoritiesConstants.USER));
-        newUser.setAuthorities(authorities.stream().map(Authority:: getName).collect(Collectors.toSet()));
-    }
-
-    /*@Test
-    public void testRemoveOldPersistentTokens() {
-        userService.removeOldPersistentTokens();
-        User admin = userRepository.findOneByLogin("admin");
-        int existingCount = persistentTokenRepository.findByUser(admin).size();
-        generateUserToken(admin, "1111-1111", new LocalDate());
-        LocalDate now = new LocalDate();
-        generateUserToken(admin, "2222-2222", now.minusDays(32));
-        assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 2);
-        userService.removeOldPersistentTokens();
-        assertThat(persistentTokenRepository.findByUser(admin)).hasSize(existingCount + 1);
+        newUser = createUser();
     }
 
     @Test
+    public void testRemoveOldPersistentTokens() {
+        userService.removeOldPersistentTokens();
+        User admin = userService.findOneByLogin("admin");
+        int existingCount = persistentTokenService.findByUser(admin).size();
+        generateUserToken(admin, "1111-1111", new LocalDate());
+        LocalDate now = new LocalDate();
+        generateUserToken(admin, "2222-2222", now.minusDays(32));
+        assertThat(persistentTokenService.findByUser(admin)).hasSize(existingCount + 2);
+        userService.removeOldPersistentTokens();
+        assertThat(persistentTokenService.findByUser(admin)).hasSize(existingCount + 1);
+    }
+/*
+    @Test
     public void assertThatUserMustExistToResetPassword() {
-
         Optional<User> maybeUser = userService.requestPasswordReset("john.doe@localhost");
         assertThat(maybeUser.isPresent()).isFalse();
 
@@ -191,14 +182,21 @@ public class UserServiceTest {
 
         userRepository.delete(user);
 
-    }
+    }*/
 
     @Test
-    public void testFindNotActivatedUsersByCreationDateBefore() {
+    public void testRemoveNotActivatedUsersByCreationDateBefore() {
         userService.removeNotActivatedUsers();
         DateTime now = new DateTime();
-        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
-        assertThat(users).isEmpty();
+        User notActiveUser = createUser();
+        notActiveUser.setActivated(false);
+        userService.addNewUser(notActiveUser);
+        userService.removeNotActivatedUsers(now.plusDays(1));
+        List<User> allUsers = userService.findAll()
+            .stream()
+            .filter(user -> user.getActivated())
+            .collect(Collectors.toList());
+        assertThat(allUsers).isEmpty();
     }
 
     private void generateUserToken(User user, String tokenSeries, LocalDate localDate) {
@@ -210,5 +208,24 @@ public class UserServiceTest {
         token.setIpAddress("127.0.0.1");
         token.setUserAgent("Test agent");
         persistentTokenRepository.saveAndFlush(token);
-    }*/
+    }
+
+    private User createUser() {
+        User newUser = new User();
+        newUser.setPassword("password1!");
+        newUser.setActivated(true);
+        newUser.setEmail(testEmail);
+        newUser.setLogin(testLogin);
+        newUser.setActivationKey("123456");
+        newUser.setFirstName("firstName");
+        newUser.setLastName("lastName");
+        newUser.setLocked(false);
+        newUser.setLangKey("en");
+        newUser.setResetKey("reset");
+
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authorityRepository.findOne(AuthoritiesConstants.USER));
+        newUser.setAuthorities(authorities);
+        return newUser;
+    }
 }
