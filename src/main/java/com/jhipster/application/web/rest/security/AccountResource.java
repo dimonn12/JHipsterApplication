@@ -10,6 +10,7 @@ import com.jhipster.application.service.mail.MailService;
 import com.jhipster.application.service.security.PersistentTokenService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.AbstractController;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import com.jhipster.application.web.rest.dto.security.KeyAndPasswordDTO;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
 import org.apache.commons.lang.StringUtils;
@@ -153,7 +154,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     /**
@@ -164,13 +165,14 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
-    public void changePassword(@RequestBody String password) {
+    public Object changePassword(@RequestBody String password) {
         getLogger().debug("REST request to change password: login={}", SecurityUtils.getCurrentLogin());
         if(!checkPasswordLength(password)) {
             addError(ErrorStatusCode.PASSWORD_IS_TOO_WEAK);
         } else {
             userService.changePassword(password);
         }
+        return EmptyResponse.noContent();
     }
 
     /**

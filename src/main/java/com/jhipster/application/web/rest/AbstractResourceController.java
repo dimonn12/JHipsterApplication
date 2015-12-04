@@ -7,6 +7,7 @@ import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.repository.BaseEntityRepository;
 import com.jhipster.application.service.EntityService;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +52,7 @@ public abstract class AbstractResourceController<S extends EntityService<R, E, I
             return getDTO(entity);
         } else {
             addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
-            return null;
+            return EmptyResponse.nullable();
         }
     }
 
@@ -68,7 +69,7 @@ public abstract class AbstractResourceController<S extends EntityService<R, E, I
             }
         }
         addError(ErrorStatusCode.ENTITY_NOT_FOUND);
-        return null;
+        return EmptyResponse.nullable();
     }
 
     protected E saveDTO(D dto) {

@@ -7,6 +7,7 @@ import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.repository.BaseEntityRepository;
 import com.jhipster.application.service.BaseEntityService;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public abstract class SoftDeletedEntityResource<S extends BaseEntityService<R, E
                 addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
             }
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,9 +56,10 @@ public abstract class SoftDeletedEntityResource<S extends BaseEntityService<R, E
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
-    public void delete(@PathVariable ID id) {
+    public Object delete(@PathVariable ID id) {
         getLogger().debug(REST_REQUEST.concat(" to delete by Id ").concat(this.entityName).concat(": id={}"), id);
         getService().delete(id);
+        return EmptyResponse.noContent();
     }
 
     @Override

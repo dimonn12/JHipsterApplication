@@ -8,6 +8,7 @@ import com.jhipster.application.security.AuthoritiesConstants;
 import com.jhipster.application.service.security.AuthorityService;
 import com.jhipster.application.service.security.UserService;
 import com.jhipster.application.web.rest.AbstractController;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import com.jhipster.application.web.rest.dto.security.ManagedUserDTO;
 import com.jhipster.application.web.rest.dto.security.UserDTO;
 import com.jhipster.application.web.rest.processor.container.HttpHeadersContainer;
@@ -94,7 +95,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
                 addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
             }
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     /**
@@ -113,7 +114,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
             HttpHeaders headers = HeaderUtil.createEntityUpdateAlert("user", managedUserDTO.getLogin());
             return new HttpHeadersContainer(headers, new ManagedUserDTO(result));
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     /**
@@ -153,7 +154,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     @RequestMapping(value = "/{login}/lock",
@@ -171,7 +172,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     @RequestMapping(value = "/{login}/unlock",
@@ -189,7 +190,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN);
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     /**

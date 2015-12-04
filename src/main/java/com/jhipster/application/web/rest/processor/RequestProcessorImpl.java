@@ -41,14 +41,14 @@ public class RequestProcessorImpl implements RequestProcessor {
         if(errorProcessor.hasErrors()) {
             return processError();
         } else {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     @Override
     public ResponseEntity<?> processRequest(String value) {
         if(errorProcessor.hasErrors()) {
-            return processRequest();
+            return processError();
         } else {
             return new ResponseEntity<>(value, HttpStatus.OK);
         }
