@@ -1,6 +1,5 @@
 package com.jhipster.application.service.security;
 
-import com.jhipster.application.config.Constants;
 import com.jhipster.application.domain.security.Authority;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.AuthorityRepository;

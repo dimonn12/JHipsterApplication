@@ -1,6 +1,5 @@
 package com.jhipster.application.web.rest.dto.errors;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jhipster.application.context.status.ErrorStatus;
 import com.jhipster.application.context.status.Status;
 import com.jhipster.application.web.rest.dto.BaseDTO;

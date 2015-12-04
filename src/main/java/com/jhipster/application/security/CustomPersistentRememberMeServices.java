@@ -3,7 +3,6 @@ package com.jhipster.application.security;
 import com.jhipster.application.domain.security.PersistentToken;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.repository.security.PersistentTokenRepository;
-import com.jhipster.application.repository.security.UserRepository;
 import com.jhipster.application.service.security.UserService;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -108,7 +107,7 @@ public class CustomPersistentRememberMeServices extends AbstractRememberMeServic
 
         log.debug("Creating new persistent login for user {}", login);
         User user = userService.findOneByLogin(login);
-        if (null != user) {
+        if(null != user) {
             PersistentToken token = new PersistentToken();
             token.setSeries(generateSeriesData());
             token.setUser(user);

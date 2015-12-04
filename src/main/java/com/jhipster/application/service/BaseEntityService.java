@@ -3,8 +3,6 @@ package com.jhipster.application.service;
 import com.jhipster.application.domain.BaseEntity;
 import com.jhipster.application.repository.BaseEntityRepository;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 

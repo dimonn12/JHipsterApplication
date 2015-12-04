@@ -5,7 +5,6 @@ import com.jhipster.application.repository.BaseEntityRepository;
 import org.joda.time.DateTime;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Spring Data JPA repository for the User entity.

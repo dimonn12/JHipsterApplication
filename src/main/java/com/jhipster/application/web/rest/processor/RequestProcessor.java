@@ -33,14 +33,14 @@ public interface RequestProcessor {
     ResponseEntity<?> processRequest(String entityName, BaseEntity<?, ?> entity, BaseEntityDTO<?, ?> dto);
 
     ResponseEntity<?> processRequest(String creationAlertMessage,
-                                            URI forward,
-                                            BaseEntity<?, ?> entity,
-                                            BaseEntityDTO<?, ?> dto);
+                                     URI forward,
+                                     BaseEntity<?, ?> entity,
+                                     BaseEntityDTO<?, ?> dto);
 
     ResponseEntity<?> processSaveRequest(String creationAlertMessage,
-                                                URI forward,
-                                                BaseEntity<?, ?> entity,
-                                                BaseEntityDTO<?, ?> dto);
+                                         URI forward,
+                                         BaseEntity<?, ?> entity,
+                                         BaseEntityDTO<?, ?> dto);
 
     ResponseEntity<?> processRequest(MultiValueMap<String, String> headers, Object body);
 

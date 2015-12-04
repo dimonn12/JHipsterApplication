@@ -5,13 +5,12 @@ import org.aopalliance.aop.Advice;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import java.lang.annotation.Annotation;
 
 /**
  * Created by dimonn12 on 17.10.2015.
  */
 @Component
-public class AdviceFactoryImpl implements AdviceFactory{
+public class AdviceFactoryImpl implements AdviceFactory {
 
     @Inject
     private RequestProcessor requestProcessor;

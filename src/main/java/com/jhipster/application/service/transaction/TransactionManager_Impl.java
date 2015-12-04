@@ -2,7 +2,6 @@ package com.jhipster.application.service.transaction;
 
 import com.jhipster.application.context.ContextHolder;
 import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.DefaultTransactionStatus;
 
 import javax.inject.Inject;

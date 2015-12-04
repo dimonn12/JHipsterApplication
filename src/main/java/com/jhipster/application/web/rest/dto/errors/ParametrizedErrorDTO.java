@@ -2,8 +2,6 @@ package com.jhipster.application.web.rest.dto.errors;
 
 import com.jhipster.application.web.rest.dto.BaseDTO;
 
-import java.io.Serializable;
-
 /**
  * DTO for sending a parameterized error message.
  */

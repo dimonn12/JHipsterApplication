@@ -1,10 +1,8 @@
 package com.jhipster.application.postprocessor;
 
 import com.jhipster.application.aop.rest.AdviceFactory;
-import com.jhipster.application.aop.rest.RestResponseMethodInterceptor;
 import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.web.rest.AbstractController;
-import com.jhipster.application.web.rest.processor.RequestProcessor;
 import org.aopalliance.aop.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,4 +161,4 @@ public class RestControllerAnnotationBeanPostProcessor implements BeanPostProces
         }*/
 
 
-    }
+}

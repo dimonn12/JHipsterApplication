@@ -5,7 +5,6 @@ import com.jhipster.application.context.ContextHolder;
 import com.jhipster.application.context.status.ErrorStatus;
 import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.context.status.Status;
-import com.jhipster.application.context.status.StatusType;
 import com.jhipster.application.web.rest.dto.errors.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -141,8 +141,8 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
      * GET  /users/:login -> get user by login.
      */
     @RequestMapping(value = "/{login}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.BASE_DTO)
@@ -198,8 +198,8 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
      * to the query.
      */
     @RequestMapping(value = "/_search/{query}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+                    method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     @Secured(AuthoritiesConstants.ADMIN)
     @RestResponse(type = RestResponse.ResponseReturnType.LIST)
@@ -249,8 +249,7 @@ public class UserResource extends AbstractController<User, UserDTO, Long> {
         user.setActivated(dto.isActivated());
         if(null != dto.getAuthorities()) {
             user.setAuthorities(dto.getAuthorities()
-                .stream()
-                .map(authorityService:: getAuthorityByName)
+                .stream().map(authorityService::getAuthorityByName)
                 .collect(Collectors.toSet()));
         }
         return user;
