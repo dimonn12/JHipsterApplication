@@ -1,5 +1,6 @@
 package com.jhipster.application.web.rest.security;
 
+import com.jhipster.application.annotation.AuthorityMethodText;
 import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.security.User;
 import com.jhipster.application.web.rest.AbstractControllerTest;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see UserResource
  */
+@AuthorityMethodText(authority = AuthorityMethodText.AuthorityMethod.ADMIN)
 public class UserResourceTest extends AbstractControllerTest<UserResource, User, UserDTO, Long> {
 
     private static final String URL = "/api/users";
@@ -29,8 +31,7 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
     @Test
     public void testGetExistingUser() throws Exception {
         ResultActions ra = sendGet(URL, "admin");
-        ra.andExpect(status().isOk()).andExpect(jsonPath("$.lastName").value("Administrator"));
-        afterTestOccurred();
+        ra.andExpect(status().isOk()).andExpect(jsonPath("$.login").value("admin"));
     }
 
     @Test
@@ -38,14 +39,12 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
         ResultActions ra = sendGet(URL, "unknown");
         ra.andExpect(status().isNotFound())
             .andExpect(jsonPath("$.errorStatuses[0].code").value(ErrorStatusCode.USER_NOT_FOUND_BY_LOGIN.getCode()));
-        afterTestOccurred();
     }
 
     @Test
     public void testGetAllUsers() throws Exception {
         ResultActions ra = sendGet(URL);
         ra.andExpect(status().isOk());
-        afterTestOccurred();
     }
 
     @Test
@@ -86,6 +85,6 @@ public class UserResourceTest extends AbstractControllerTest<UserResource, User,
                 StringContains.containsString("</api/users?page=0&size=1>; rel=\"first\"")));
         JSONArray json = new JSONArray(ra.andReturn().getResponse().getContentAsString());
         Assert.assertEquals(json.length(), 1);
-        afterTestOccurred();
     }
+
 }

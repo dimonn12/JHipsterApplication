@@ -45,4 +45,12 @@ public class ErrorStatus implements Status {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ErrorStatus{" +
+               "code=" + code +
+               ", message='" + message + '\'' +
+               '}';
+    }
 }

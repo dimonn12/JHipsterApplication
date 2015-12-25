@@ -208,7 +208,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     method = RequestMethod.DELETE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
-    public void invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
+    public Object invalidateSession(@PathVariable String series) throws UnsupportedEncodingException {
         getLogger().debug("REST request to invalidate session: login={}, series={}",
             SecurityUtils.getCurrentLogin(),
             series);
@@ -225,6 +225,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                 token.ifPresent(t -> persistentTokenService.delete(decodedSeries));
             }
         }
+        return EmptyResponse.noContent();
     }
 
     @RequestMapping(value = "/account/reset_password/init",
@@ -232,7 +233,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
                     produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     @RestResponse(type = RestResponse.ResponseReturnType.DEFAULT)
-    public void requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
+    public Object requestPasswordReset(@RequestBody String mail, HttpServletRequest request) {
         getLogger().debug("REST request to request password reset by email: email={}", mail);
         User user = userService.requestPasswordReset(mail);
         if(null != user) {
@@ -245,6 +246,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
         } else {
             addError(ErrorStatusCode.USER_NOT_FOUND_BY_EMAIL);
         }
+        return EmptyResponse.noContent();
     }
 
     @RequestMapping(value = "/account/reset_password/finish",
@@ -259,7 +261,7 @@ public class AccountResource extends AbstractController<User, UserDTO, Long> {
         } else {
             return getDTO(userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey()));
         }
-        return null;
+        return EmptyResponse.nullable();
     }
 
     protected UserDTO getDTO(User entity) {

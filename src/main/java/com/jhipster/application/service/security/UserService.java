@@ -364,7 +364,8 @@ public class UserService extends EntityService<UserRepository, User, Long> {
             userSearchRepository.save(user);
             return user;
         } catch(Exception e) {
-            logger.error("Can't update {}", e, user);
+            logger.error("Can't update {}", user);
+            logger.error("Exception in saveUser():", e);
             addError(ErrorStatusCode.INTERNAL_SERVER_ERROR);
         }
         return null;

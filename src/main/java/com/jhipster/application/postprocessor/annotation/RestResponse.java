@@ -15,7 +15,7 @@ public @interface RestResponse {
 
     ResponseReturnType type() default ResponseReturnType.DEFAULT;
 
-    public enum ResponseReturnType {
+    enum ResponseReturnType {
         LIST, BASE_ENTITY, SAVE_REQUEST, BASE_DTO, STRING, HTTP_HEADERS_CONTAINER, URI_CONTAINER, DEFAULT
     }
 
