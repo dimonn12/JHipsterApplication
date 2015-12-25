@@ -14,6 +14,8 @@ public interface PersistentTokenRepository extends JpaRepository<PersistentToken
 
     List<PersistentToken> findByUser(User user);
 
+    List<PersistentToken> findByUserOrderByTokenDateDesc(User user);
+
     List<PersistentToken> findByTokenDateBefore(LocalDate localDate);
 
 }
