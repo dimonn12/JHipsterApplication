@@ -4,6 +4,7 @@ import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.BaseEntity;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
@@ -16,11 +17,15 @@ import java.util.List;
  */
 public interface RequestProcessor {
 
+  boolean hasError();
+
     void addError(ErrorStatusCode errorStatusCode);
 
     ResponseEntity<?> processError();
 
     ResponseEntity<?> processRequest();
+
+  ResponseEntity<?> processRequest(EmptyResponse response);
 
     ResponseEntity<?> processRequest(String value);
 

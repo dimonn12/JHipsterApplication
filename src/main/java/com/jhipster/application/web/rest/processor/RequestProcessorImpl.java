@@ -4,6 +4,7 @@ import com.jhipster.application.context.status.ErrorStatusCode;
 import com.jhipster.application.domain.BaseEntity;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import com.jhipster.application.web.rest.util.HeaderUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,11 @@ public class RequestProcessorImpl implements RequestProcessor {
     private ErrorProcessor errorProcessor;
 
     @Override
+    public boolean hasError() {
+        return errorProcessor.hasErrors();
+    }
+
+    @Override
     public void addError(ErrorStatusCode errorStatusCode) {
         errorProcessor.addError(errorStatusCode);
     }
@@ -42,6 +48,15 @@ public class RequestProcessorImpl implements RequestProcessor {
             return processError();
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> processRequest(EmptyResponse response) {
+        if(errorProcessor.hasErrors()) {
+            return processError();
+        } else {
+            return new ResponseEntity<>(response.getContent(), response.getStatus());
         }
     }
 

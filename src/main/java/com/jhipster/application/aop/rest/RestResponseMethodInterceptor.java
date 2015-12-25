@@ -6,6 +6,7 @@ import com.jhipster.application.domain.BaseEntity;
 import com.jhipster.application.postprocessor.annotation.RestResponse;
 import com.jhipster.application.web.rest.dto.BaseDTO;
 import com.jhipster.application.web.rest.dto.BaseEntityDTO;
+import com.jhipster.application.web.rest.dto.EmptyResponse;
 import com.jhipster.application.web.rest.processor.RequestProcessor;
 import com.jhipster.application.web.rest.processor.container.HttpHeadersContainer;
 import com.jhipster.application.web.rest.processor.container.URIBodyContainer;
@@ -80,6 +81,13 @@ public class RestResponseMethodInterceptor implements MethodInterceptor, MethodC
     private ResponseEntity<?> processInvocationResult(Object result,
                                                       RestResponse.ResponseReturnType annotationReturnType,
                                                       Object[] args) {
+        if(requestProcessor.hasError()) {
+            return requestProcessor.processError();
+        } else {
+            if(result instanceof EmptyResponse) {
+                return requestProcessor.processRequest((EmptyResponse)result);
+            }
+        }
         switch(annotationReturnType) {
             case STRING:
                 return requestProcessor.processRequest((String)result);
